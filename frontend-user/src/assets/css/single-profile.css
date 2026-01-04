@@ -1,0 +1,1010 @@
+/* =========================================
+   SINGLE MODEL PAGE — matches index colors & replica layout of profile details
+   ========================================= */
+
+.single-profile {
+  background: #020617;
+  color: #f9fafb;
+  padding-bottom: 40px;
+}
+
+/* inner width */
+.sp-inner {
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0;
+  padding: 0 28px;
+}
+
+@media (max-width: 768px) {
+  .sp-inner {
+    padding: 0 16px;
+  }
+}
+
+/* ===== TITLE BAR ===== */
+
+.sp-title-bar {
+  padding: 24px 0 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.sp-main-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.sp-subline {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(249, 250, 251, 0.7);
+  margin-top: 6px;
+}
+
+/* ===== PROFILE DETAILS BLOCK ===== */
+
+.sp-details {
+  padding: 24px 0 26px;
+}
+
+/* prev / next buttons */
+
+.sp-nav-btn {
+  position: relative;
+  z-index: 5;
+  margin-bottom: 8px;
+  padding: 7px 15px;
+  border-radius: 999px;
+  border: none;
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sp-nav-prev {
+  float: left;
+}
+
+.sp-nav-next {
+  float: right;
+}
+
+.sp-details::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* main 2-column grid */
+
+.sp-details-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 980px) {
+  .sp-details-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==============================
+   BASE CARD STYLE
+   ============================== */
+
+.sp-card {
+  background: #020617;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  padding: 0;
+  color: #f9fafb;
+}
+
+/* =========================================
+   LEFT COLUMN MAIN PROFILE CARD
+   ========================================= */
+
+.sp-main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sp-profile-main-card {
+  padding: 12px 14px 14px;
+}
+
+/* header */
+
+.sp-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.sp-profile-name {
+  font-size: 20px;
+  margin: 0 0 2px;
+}
+
+.sp-profile-sub {
+  margin: 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.sp-profile-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.sp-profile-pill {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  color: #e5e7eb;
+  background: #020617;
+}
+
+/* ===== MAIN IMAGE AREA (DESKTOP) ===== */
+
+.sp-profile-top {
+  display: block;
+}
+
+.sp-profile-photo-main {
+  width: 100%;
+}
+
+/* STANDARD SIZE MODEL IMAGES */
+
+.sp-photo-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .sp-photo-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sp-photo-box {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+/* fixed aspect ratio so all models same height */
+.sp-photo-box::before {
+  content: "";
+  display: block;
+  padding-top: 135%;
+}
+
+/* real image */
+.sp-photo-img,
+.sp-photo-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sp-photo-img {
+  object-fit: cover;
+}
+
+/* placeholder styling */
+.sp-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgba(249, 250, 251, 0.7);
+}
+
+/* About / bio section */
+
+.sp-profile-bio {
+  margin-top: 12px;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  padding-top: 10px;
+  font-size: 13px;
+  color: rgba(249, 250, 251, 0.85);
+}
+
+.sp-profile-section-title {
+  font-size: 14px;
+  margin: 0 0 6px;
+  color: #f9fafb;
+}
+
+.sp-profile-bio-text p {
+  font-size: 13px;
+  color: rgba(249, 250, 251, 0.8);
+  margin-bottom: 8px;
+}
+
+/* ===========================
+   HEADING ICONS
+   =========================== */
+
+.sp-heading-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  font-size: 11px;
+  background: rgba(225, 29, 72, 0.18);
+  border: 1px solid rgba(225, 29, 72, 0.45);
+  color: #f9a8d4;
+}
+
+/* individual icons */
+.sp-heading-icon-info::before {
+  content: "i";
+  font-weight: 700;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+.sp-heading-icon-contact::before {
+  content: "✉";
+  font-size: 10px;
+}
+
+.sp-heading-icon-profile::before {
+  content: "👤";
+}
+
+.sp-heading-icon-rates::before {
+  content: "⏱";
+}
+
+.sp-heading-icon-availability::before {
+  content: "📅";
+}
+
+.sp-heading-icon-about::before {
+  content: "★";
+}
+
+/* ===========================
+   RIGHT: sidebar column
+   =========================== */
+
+.sp-side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* MAIN INFO CARD */
+
+.sp-main-info-card {
+  padding: 0;
+}
+
+/* header row */
+
+.sp-main-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  background: #020617;
+}
+
+.sp-main-info-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.sp-main-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* verified pill */
+
+.sp-verify-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sp-verify-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #bbf7d0;
+}
+
+.sp-posted {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.sp-posted span {
+  font-weight: 500;
+}
+
+/* stats grid */
+
+.sp-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px 8px 8px;
+}
+
+.sp-info-item {
+  background: #0b1120;
+  border-radius: 10px;
+  padding: 4px 6px;
+  text-align: center;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #f3f4f6;
+}
+
+.sp-info-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+  margin-bottom: 1px;
+}
+
+.sp-info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+@media (max-width: 1200px) {
+  .sp-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* CONTACT SECTION */
+
+.sp-contact-section {
+  padding: 10px 14px 12px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.sp-contact-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.sp-contact-banner {
+  background: rgba(244, 114, 182, 0.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #f9fafb;
+  margin-bottom: 8px;
+  border: 1px solid rgba(244, 114, 182, 0.25);
+}
+
+.sp-contact-banner strong {
+  color: #f472b6;
+}
+
+/* contact rows */
+
+.sp-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.sp-contact-row:last-of-type {
+  border-bottom: none;
+}
+
+.sp-contact-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #e5e7eb;
+  background: #0b1120;
+}
+
+/* icon variants */
+.sp-contact-icon-phone::before {
+  content: "📞";
+}
+
+.sp-contact-icon-web::before {
+  content: "🌐";
+}
+
+.sp-contact-icon-x::before {
+  content: "✖";
+  font-size: 13px;
+}
+
+.sp-contact-text {
+  flex: 1;
+}
+
+.sp-contact-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
+
+.sp-contact-main {
+  font-size: 14px;
+  color: #f3f4f6;
+}
+
+.sp-contact-main a {
+  color: #93c5fd;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.sp-contact-main-strong {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #f9fafb;
+}
+
+/* favourite / like buttons */
+
+.sp-contact-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.sp-btn {
+  flex: 1;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sp-btn-icon {
+  font-size: 14px;
+}
+
+.sp-btn-secondary {
+  background: #0b1120;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  color: #e5e7eb;
+}
+
+.sp-btn-primary {
+  background: #e11d48;
+  border-color: #e11d48;
+  color: #ffffff;
+}
+
+/* SIDE CARDS (My profile, Rates, Services) */
+
+.sp-side-card {
+  padding: 0;
+}
+
+.sp-side-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  font-size: 13px;
+  font-weight: 600;
+  color: #e11d48;
+  background: #020617;
+}
+
+.sp-side-body {
+  padding: 10px 12px 12px;
+}
+
+/* mini profile list — TRUE 2-COLUMN LAYOUT */
+
+.sp-mini-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sp-mini-list.sp-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 20px;
+  row-gap: 6px;
+}
+
+@media (max-width: 600px) {
+  .sp-mini-list.sp-two-col {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sp-mini-list li {
+  font-size: 12px;
+}
+
+.sp-mini-list li span:first-child {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
+
+.sp-mini-list li span:last-child {
+  display: block;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* rates table */
+
+.sp-rates-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: #f3f4f6;
+  margin-bottom: 6px;
+}
+
+.sp-rates-table thead th {
+  font-weight: 600;
+  text-align: left;
+  padding: 4px 4px;
+  border-bottom: 2px solid rgba(252, 165, 165, 0.5);
+}
+
+.sp-rates-table tbody td {
+  padding: 4px 4px;
+}
+
+.sp-rates-table tbody tr:nth-child(odd) td {
+  background: #0b1120;
+}
+
+.sp-rates-note {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* availability text if used */
+.sp-availability-text {
+  font-size: 12px;
+  color: #e5e7eb;
+}
+
+/* REPORT BUTTON */
+
+.sp-report-btn {
+  margin-top: 4px;
+  padding: 9px 12px;
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid rgba(248, 113, 113, 0.8);
+  background: #0b1120;
+  color: #fecaca;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sp-report-flag {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #fecaca;
+  position: relative;
+}
+
+.sp-report-flag::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  width: 6px;
+  height: 8px;
+  background: #fecaca;
+}
+
+/* ===== AGENCY STRIP & GALLERY (DESKTOP) ===== */
+
+.sp-agency-strip {
+  padding: 20px 0 24px;
+}
+
+.sp-agency-header {
+  background: #0f172a;
+  border-radius: 10px 10px 0 0;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #f9fafb;
+}
+
+.sp-agency-logo {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.sp-agency-thumbs {
+  display: flex;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.sp-agency-thumbs span {
+  padding: 4px 7px;
+  border-radius: 4px;
+  background: #111827;
+}
+
+/* GALLERY GRID – DESKTOP LAYOUT */
+
+.sp-gallery-grid {
+  background: #020617;
+  border-radius: 0 0 10px 10px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+/* responsive columns desktop/tablet */
+@media (max-width: 1200px) {
+  .sp-gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .sp-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* gallery item with fixed aspect ratio */
+
+.sp-gallery-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+/* 4:5 portrait-ish ratio – good for model shots */
+.sp-gallery-item::before {
+  content: "";
+  display: block;
+  padding-top: 125%;
+}
+
+/* image fills the box */
+.sp-gallery-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+/* RELATED PROFILES */
+
+.sp-related {
+  padding: 28px 0 0;
+}
+
+.sp-related-title {
+  font-size: 18px;
+  color: #f9fafb;
+  margin-bottom: 14px;
+}
+
+/* Services heading icon */
+.sp-heading-icon-services::before {
+  content: "⚙";
+}
+
+/* Services grid layout */
+.sp-services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Individual service "pill" – checkbox style */
+.sp-service-pill {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #020617;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  font-size: 11px;
+  color: #e5e7eb;
+}
+
+.sp-service-check {
+  font-size: 11px;
+  color: #22c55e;
+  margin-top: 1px;
+}
+
+.sp-service-text {
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .sp-service-pill {
+    white-space: normal;
+  }
+}
+
+/* =========================================
+   GALLERY DOTS (MOBILE)
+   ========================================= */
+
+.sp-gallery-dots {
+  display: none; /* show only on mobile */
+}
+
+/* =========================================
+   MOBILE BEHAVIOUR:
+   1) Make single-profile a flex column
+   2) Show GALLERY section before DETAILS
+   3) Gallery behaves like horizontal slider
+   4) Hide main image grid to avoid duplicate
+   5) Show dots under gallery
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* reorder sections so gallery comes before details */
+  .single-profile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sp-title-bar {
+    order: 0;
+  }
+
+  .sp-agency-strip {
+    order: 1;
+  }
+
+  .sp-details {
+    order: 2;
+  }
+
+  .sp-related {
+    order: 3;
+  }
+
+  /* hide the in-card main images on mobile so they
+     are only seen via gallery slider (but still used
+     separately on desktop) */
+  .sp-profile-top {
+    display: none;
+  }
+
+  /* full-bleed gallery on mobile */
+  .sp-agency-strip .sp-inner {
+    padding: 0;
+  }
+
+  .sp-agency-header {
+    border-radius: 0;
+    padding: 10px 16px;
+  }
+
+  /* horizontal slider */
+  .sp-gallery-grid {
+    border-radius: 0;
+    padding: 10px 0 8px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sp-gallery-item {
+    min-width: 86%;
+    max-width: 86%;
+    scroll-snap-align: center;
+  }
+
+  .sp-gallery-item::before {
+    padding-top: 135%;
+  }
+
+  .sp-gallery-img {
+    object-fit: cover;
+  }
+
+  /* dots under gallery */
+  .sp-gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 0 10px;
+  }
+
+  .sp-gallery-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(148, 163, 184, 0.5);
+    padding: 0;
+  }
+
+  .sp-gallery-dot.is-active {
+    width: 16px;
+    border-radius: 999px;
+    background: #e11d48;
+  }
+}
+
+/* Hide dots by default (desktop) */
+.sp-gallery-dots {
+  display: none;
+}
+
+/* ===== MOBILE-ONLY LAYOUT CHANGES ===== */
+@media (max-width: 768px) {
+
+  /* 1) Reorder: images (gallery) first, then details, then related */
+  .single-profile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sp-title-bar {
+    order: 0;
+  }
+
+  .sp-agency-strip {
+    order: 1;
+  }
+
+  .sp-details {
+    order: 2;
+  }
+
+  .sp-related {
+    order: 3;
+  }
+
+  /* 2) Do not show main images twice: hide top image block on mobile */
+  .sp-profile-top {
+    display: none;
+  }
+
+  /* 3) Gallery behaves like a slider on mobile */
+  .sp-agency-strip .sp-inner {
+    padding: 0;
+  }
+
+  .sp-agency-header {
+    border-radius: 0;
+    padding: 10px 16px;
+  }
+
+  .sp-gallery-grid {
+    border-radius: 0;
+    padding: 10px 0 8px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sp-gallery-item {
+    min-width: 86%;
+    max-width: 86%;
+    scroll-snap-align: center;
+  }
+
+  .sp-gallery-item::before {
+    content: "";
+    display: block;
+    padding-top: 135%; /* tall portrait */
+  }
+
+  .sp-gallery-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 4) Dots / indicators under the gallery */
+  .sp-gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 0 10px;
+  }
+
+  .sp-gallery-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(148, 163, 184, 0.5);
+    padding: 0;
+  }
+
+  .sp-gallery-dot.is-active {
+    width: 16px;
+    border-radius: 999px;
+    background: #e11d48; /* pink accent */
+  }
+}

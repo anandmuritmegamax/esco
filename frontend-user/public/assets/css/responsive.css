@@ -1,0 +1,209 @@
+@media(max-width:1366px){
+	.banner-container .banner-content .banner-caption .heading {font-size: 48px;}
+	.home-sec .heading {padding: 0 10%;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col .text h2 {font-size: 26px;}
+	.testimonial-container .testimonials {padding: 0 10%;}
+	.carousel-single .owl-nav .owl-prev {left: 7%;}
+	.carousel-single .owl-nav .owl-next {right: 7%;}
+	.testimonial-container {padding: 50px 0 80px;}
+	.subscribe-newsletter-container .subscribe-newsletter {padding: 0;}
+	.subscribe-newsletter-container .subscribe-newsletter .text .input-box, .subscribe-newsletter-container .subscribe-newsletter .text .input-box input[type="text"] {width: 530px;}
+	.recommended-airports {width: 62%;}
+	.final-selected {width: 100%;}
+	.listing-container .listing .listing-box .price {width: 500px;margin-left: 40px;}
+	.listing-container .listing .listing-box .price .button a {padding: 12px 24px;min-width: 150px;font-size: 16px;}
+	.listing-container .listing .listing-box .listing-row .content p {font-size: 15px;line-height: 20px;}
+	.summary-container .summary .summary-details .promo-box .promo input[type="text"] {font-size: 15px;width: 64%;height: 50px;}
+	.summary-container .summary .summary-details .promo-box .promo input[type="submit"] {height: 50px;width: 90px;}
+	.summary-container .summary .summary-content .summary-guidelines {margin-top: 30px;}
+	.summary-container .summary {grid-template-columns: 70% 27%;}
+	.get-rideinfo .get-rideinfo-col {width: 33%;}
+	.get-rideinfo .pickuptime-col {width: 10%;}
+	.get-rideinfo .get-rideinfo-button {width: auto !important;}
+	.listing-container .listing .listing-box .listing-row .content {width: 100%;}
+	.listing-container .listing .listing-box .listing-row .thumb img {width: 300px;}
+	.listing-container .listing .listing-box .listing-row .content .stats {padding-bottom: 12px;}
+}
+
+@media(max-width:1024px){
+	.header-container .header .nav {display: none;}
+	.banner-container .banner-content {height: auto;flex-direction: column;}
+	.banner-container .banner-content .banner-caption {width: 100%;margin-top: 50px;}
+	.banner-container {height: 100%;padding: 30px 0 100px;}
+	.banner-container .banner-content .booking-part .booking-engine .booking-tabs {justify-content: center;}
+	.home-sec .heading {padding: 0;}
+	.flybeyond {margin-top: 100px;}
+	.home-sec .heading h1 {font-size: 40px;}
+	.home-sec .heading p {font-size: 16px;line-height: 26px;}
+	.flybeyond .flybeyond-content .flybeyond-row {flex-wrap:wrap;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col:nth-child(2) img {border-radius: 0 40px 0 0;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col:nth-child(3) img, .flybeyond .flybeyond-content .flybeyond-row .flybeyond-col:nth-child(3) {border-radius: 0 0 0 40px;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col:nth-child(4) img, .flybeyond .flybeyond-content .flybeyond-row .flybeyond-col:nth-child(4) {border-radius: 0 0 40px 0;}
+	.home-sec .heading h2 {font-size: 40px;}
+	.home-service-container .home-service .home-service-text {width: 100%;margin-right: 0;order: 2;}
+	.home-service-container .home-service {flex-wrap: wrap;}
+	.home-service-container {padding: 40px 0;}
+	.home-why-chooseus-container .home-why-chooseus .home-why-chooseus-col {height: 350px;padding: 10px;}
+	.home-why-chooseus-container .home-why-chooseus .home-why-chooseus-col .icon {margin: 40px auto 20px;height: 82px;width: 82px;}
+	.testimonial-container .testimonials {padding: 0 6%;}
+	.carousel-single .owl-nav .owl-prev {left: 0;}
+	.carousel-single .owl-nav .owl-next {right:0}
+	.testimonial-container .testimonials .testimonial-content .author-info .text h4 {font-size: 20px;}
+	.testimonial-container .testimonials .testimonial-content .author-info .thumb img {height: 60px;width: 60px;}
+	.carousel-single .owl-nav button {height: 60px;width: 60px;border-radius: 20px;}
+	.testimonial-container .testimonials .testimonial-content p {font-size: 16px;line-height: 26px;}
+	.subscribe-newsletter-container .subscribe-newsletter {flex-wrap: wrap;}
+	.subscribe-newsletter-container .subscribe-newsletter .thumb {margin-right: 0;text-align: center;width: 100%;}
+	.subscribe-newsletter-container .subscribe-newsletter .thumb img {width: 300px;display: inline-block;}
+	.subscribe-newsletter-container .subscribe-newsletter .text {text-align: center;}
+	.subscribe-newsletter-container .subscribe-newsletter .text p {padding-right: 0;}
+	.subscribe-newsletter-container .subscribe-newsletter .text .input-box {margin: 25px auto;}
+	.subscribe-newsletter-container .subscribe-newsletter .text h2 {font-size: 40px;}
+	.subscribe-newsletter-container .subscribe-newsletter .text h2 strong {width: auto;}
+	.footer-container .footer {grid-template-columns: 100%;}
+	.footer-container .footer .footer-col:first-child {padding-right: 0;}
+	.footer-container .footer .footer-col {margin: 20px 0;}
+	.footer-container .footer .footer-col h4 {margin-bottom: 10px;}
+	
+	.recommended-airports .recomm-box .recomm-box-left {padding-right: 2%;}
+	.recommended-airports .recomm-box .recomm-box-right {padding-left: 2%;}
+	.recommended-airports {width: 100%;}
+	.final-selected {width: 94%;}
+	.listing-container .listing {grid-template-columns: 100%;}
+	.listing-container .listing .filter {display: flex;}
+	.listing-container .listing .filter .filter-box {margin-right: 50px;}
+	.listing-container .listing .listing-box .listing-row {flex-wrap: wrap;flex-direction: column;}
+	.listing-container .listing .listing-box {display: grid;grid-template-columns: 49% 49%;justify-content: space-between;}
+	.listing-container .listing .listing-box .listing-row .thumb img {border-radius: 8px 8px 0 0;width: 100%;}
+	.listing-container .listing .listing-box .listing-row .thumb {margin-right: 0;border-radius: 8px 8px 0 0;width: 100%;}
+	.listing-container .listing .listing-box .listing-row .content {width: 100%;padding: 5px 20px;}
+	.listing-container .listing .listing-box .listing-row .content h2 {font-size: 22px;flex-wrap: wrap;}
+	.listing-container .listing .listing-box .listing-row .content .stats .stats-col p {font-size: 13px;}
+	.listing-container .listing .listing-box .listing-row .content .stats .stats-col {margin: 0 10px;}
+	.listing-container .listing .listing-box .price {width: 100%;padding-left: 20px;margin-left: 0;margin-bottom: 30px;}
+	.emptyleg-info {margin-left: 0;width: 100%;margin-top: 10px;}
+	.summary-container .summary {grid-template-columns: 100%;}
+	.summary-container .summary .summary-content .summary-header {flex-direction:column ;}
+	.summary-container .summary .summary-content .summary-header .summary-headerright .stats {justify-content: center;}
+	.summary-container .summary .summary-content {margin-bottom: 30px;}
+	.summary-container .summary .summary-details .promo-box .promo input[type="text"] {width: 80%;}
+	.faq-container .faq {padding: 0;}
+	.faq-container {margin-top: 30px;}
+	.top-searchbar .search-flex input[type="text"] {width: 60%;}
+	
+	.get-rideinfo .get-rideinfo-col {width: 60%;margin-bottom: 12px;}
+	.get-rideinfo .pickuptime-col {width: 20%;}
+	.get-rideinfo {flex-wrap: wrap;}
+	.get-rideinfo .get-rideinfo-button {width: 20% !important;}
+	.ride-details {margin-top: 20px;}
+	.get-rideinfo .pickuptime-col {width: 20% !important;}
+}
+
+@media(max-width:1024px) and (orientation:landscape){
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col {width: 50%;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col img {width: 100%;}
+	.home-service-container .home-service {flex-wrap: nowrap;}
+	.home-service-container .home-service .home-service-text {order: inherit;}
+	.home-service-container .home-service .home-service-thumb {width: 350px;}
+	.home-service-container .home-service .home-service-thumb img {width:100%}
+	.home-service-container .home-service .home-service-thumb {width: 700px;margin-left: 5%;}
+	.home-why-chooseus-container .home-why-chooseus .home-why-chooseus-col {height: 380px;padding: 30px;}
+	.home-why-chooseus-container .home-why-chooseus .home-why-chooseus-col .icon {margin-top:50px}
+	.carousel-single .owl-nav .owl-prev {left: 3%;}
+	.carousel-single .owl-nav .owl-next {right: 3%;}
+	.home-sec .heading {padding: 0 6%;}
+	.final-selected {width: 70%;}
+}
+
+@media(max-width:767px){
+	.banner-container .banner-content .banner-caption .heading {font-size: 26px;}
+	.banner-container .banner-content .booking-part .booking-engine .booking-tabs {flex-wrap: wrap;}
+	.banner-container .banner-content .booking-part .booking-engine .booking-tabs a {margin: 4px;min-width: 132px;text-align: center;}
+	.banner-container .banner-content .booking-part .booking-engine {margin-top: 40px;}
+	.banner-container .banner-content .banner-caption {margin-top: 15px;}
+	.banner-container .downarrow img {width: 50px;}
+	.banner-container .downarrow {bottom: -35px;}
+	.flybeyond {margin-top: 60px;}
+	.home-sec .heading h1 {font-size: 34px;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col {border-radius: 40px !important;margin-bottom: 15px;width: 100%;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col img {border-radius: 40px !important;width: 100%;}
+	.flybeyond .flybeyond-content .flybeyond-row .flybeyond-col .text h2 {font-size: 24px;}
+	.home-service-container {margin-top: 30px;}
+	.flybeyond .flybeyond-content .flybeyond-row {margin-bottom: 20px;}
+	.home-sec .heading h2 {font-size: 34px;}
+	.home-service-container .home-service .home-service-thumb img {width: 100%;}
+	.home-service-container .home-service .home-service-text .hs-text-box h3 {font-size: 20px;}
+	.home-service-container .home-service .home-service-text .hs-text-box p {font-size: 16px;line-height: 26px;}
+	.home-service-container {padding: 40px 0 10px;}
+	.home-why-chooseus-container {padding: 30px 0;}
+	.home-why-chooseus-container .home-why-chooseus .home-why-chooseus-col {width: 100%;padding: 30px;margin-bottom: 15px;border-radius: 130px;}
+	.home-why-chooseus-container .home-why-chooseus {flex-wrap:wrap;}
+	.carousel-single .owl-nav .owl-prev {position: static;transform: none;}
+	.carousel-single .owl-nav .owl-next {position: static;transform: none;}
+	.carousel-single .owl-nav {text-align: center;margin-top: 15px;}
+	.carousel-single .owl-nav button {height: 50px;width: 50px;border-radius: 10px;margin: 5px;}
+	.testimonial-container .testimonials {padding: 0;}
+	.testimonial-container .testimonials .testimonial-content {padding: 70px 10px 25px;}
+	.testimonial-container .testimonials .testimonial-content p span {font-size: 120px;}
+	.testimonial-container .testimonials .testimonial-content p {font-size: 14px;line-height: 24px;}
+	.testimonial-container {padding: 30px 0 30px;}
+	.subscribe-newsletter-container .subscribe-newsletter .text .input-box, .subscribe-newsletter-container .subscribe-newsletter .text .input-box input[type="text"] {width: 100%;}
+	.subscribe-newsletter-container .subscribe-newsletter .text p {font-size: 16px;line-height: 26px;}
+	.footer-container {padding: 10px 0 30px;}
+	.footer-container .footer .footer-col ul li {padding: 2px 0;}
+	.copyright-container .copyright p {font-size: 14px;}
+	.recommended-airports h2 {font-size: 24px;}
+	.recommended-airports .recomm-box .location-box-single .icon {display: none;}
+	.recommended-airports .recomm-box .location-box-single {width: 160px;padding: 10px;margin: 15px 0;}
+	.recommended-airports .recomm-box .location-box-single .text {text-align: center;margin-bottom: 4px;}
+	.recommended-airports .recomm-box .location-box-single .text .heading {font-size: 20px;margin-bottom: 4px;}
+	.recommended-airports .recomm-box {padding: 0 15px;}
+	.recommended-airports .recomm-box .location-box-single .text .info {font-size: 12px;}
+	.recommended-airports .recomm-box .recomm-box-left .location-box-single:first-child, .recommended-airports .recomm-box .recomm-box-right .location-box-single:first-child {margin-top:0}
+	.recommended-airports .recomm-box .recomm-box-left .location-box-single:last-child, .recommended-airports .recomm-box .recomm-box-right .location-box-single:last-child {margin-bottom:0}
+	.match-notfound .location-box {margin-bottom: 10px;}
+	.final-selected .info {font-size: 12px;}
+	.final-selected .final-location-left, .final-selected .final-location-right {text-align: center;}
+	.final-selected .heading {font-size: 20px;margin-bottom: 4px;}
+	.final-selected .final-location-icon img {height: 32px;}
+	.recommended-airports {margin-bottom: 40px;}
+	.match-notfound .location-box .both-location .both-location-left .both-location-heading, .match-notfound .location-box .both-location .both-location-right .both-location-heading {font-size: 28px;}
+	.final-selected {padding: 20px;}
+	.available-flight {margin-top: 10px !important;}
+	.listing-container .listing .filter {flex-direction:column;}
+	.listing-container .listing .filter .filter-box h2 {font-size: 18px;}
+	.listing-container .listing .listing-box {grid-template-columns: 100%;}
+	.listing-container .listing .listing-box .price {margin-bottom: 20px;}
+	.summary-container .summary .summary-content .summary-header .summary-headerleft .details ul li {margin-bottom: 5px;}
+	.summary-container .summary .summary-content .summary-header .summary-headerright .stats .stats-col {margin: 0 8px;}
+	.summary-container .summary .summary-content .summary-header .summary-headerright .stats .stats-col p {font-size: 13px;}
+	.summary-container .summary .summary-details .promo-box .promo input[type="text"] {width: 72%;}
+	.top-searchbar .search-flex input[type="text"] {width: 50%;}
+	.top-searchbar .search-flex input[type="submit"] {height: 50px;width: 80px;}
+	.top-searchbar .search-flex input[type="text"] {width: 70%;height: 50px;}
+	.faq-container .faq .accordion-faq {padding: 20px 24px;}
+	.faq-container .faq .accordion-faq h3 {font-size: 18px;}
+	.faq-container .faq .accordion-faq p {font-size: 15px;}
+	
+	.get-rideinfo .get-rideinfo-col, .get-rideinfo .pickuptime-col {width: 100% !important;}
+	.get-rideinfo .get-rideinfo-col .distance-info span {margin-right: 8px;}
+	.get-rideinfo .get-rideinfo-button {width: 100% !important;}
+	.get-rideinfo .get-rideinfo-button label {display:none}
+	.get-rideinfo .get-rideinfo-button input[type="submit"], .get-rideinfo .get-rideinfo-button input[type="button"] {width: 100%;}
+	.get-rideinfo {padding: 20px 2%;}
+	.get-rideinfo .get-rideinfo-col .distance-info span {font-size: 13px;}
+	.get-rideinfo .pickuptime {background-position: 96% center !important;}
+	.ride-details .ride-info .content {font-size: 16px;}
+	.ride-details .ride-info {margin: 0 13px;}
+	.get-rideinfo-summary {padding: 0 !important;}
+	.summary-box-container {padding: 10px;}
+	.summary-box-container .summary-detail-box {margin-bottom: 5px !important;}
+	.ride-details {padding: 12px 10px;}
+	.summary-container .summary .summary-content .summary-header .summary-headerleft h2 {margin: 10px 0 14px;}
+}
+
+@media(max-width:767px) and (orientation:landscape){
+	.banner-container .banner-content .booking-part .booking-engine .booking-tabs a {min-width: auto;}
+	.recommended-airports .recomm-box .location-box-single {width: 220px;justify-content: center;}
+	
+}

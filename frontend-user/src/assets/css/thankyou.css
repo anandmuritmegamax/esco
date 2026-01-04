@@ -1,0 +1,35 @@
+.thankyoupage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+}
+
+.thankyou h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.thankyou p {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.thankyou .btn {
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.thankyou .btn:hover {
+  background-color: #0056b3;
+}

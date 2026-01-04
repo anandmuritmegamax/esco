@@ -1,0 +1,196 @@
+/* ============================
+   REGISTRATION PAGE – DubaiSociete
+   Full-screen, 3-column layout
+   ============================ */
+
+/* Container spacing similar to other sections */
+.registration-page .container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .registration-page .container {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+}
+
+/* main wrapper */
+.reg-wrapper {
+  padding: 48px 0 64px;
+  min-height: calc(100vh - 220px); /* keeps it feeling full-screen under header */
+  background:
+    radial-gradient(circle at top left, rgba(248, 113, 113, 0.18), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.25), #020617);
+}
+
+/* header */
+.reg-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* Use global h1 font (32px, bold); only adjust spacing if needed */
+.reg-header h1 {
+  margin-bottom: 8px;
+}
+
+.reg-header p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(209, 213, 219, 0.9);
+  margin: 0;
+}
+
+/* card grid */
+.reg-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 992px) {
+  .reg-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .reg-card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* individual cards */
+.reg-card {
+  border-radius: 16px;
+  background: #020617;
+  box-shadow:
+    0 22px 48px rgba(15, 23, 42, 0.9),
+    0 0 0 1px rgba(30, 64, 175, 0.55);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* top bar with site accent colors */
+.reg-card-head {
+  padding: 12px 18px;
+  background: linear-gradient(to bottom, #e11d48, #b91c1c);
+}
+
+.reg-card-head h2 {
+  margin: 0;
+  font-size: 18px;           /* matches subheading size */
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* body */
+.reg-card-body {
+  padding: 16px 18px 18px;
+  background: #0b1120;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.reg-feature-list {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(229, 231, 235, 0.95);
+}
+
+.reg-feature-list li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.reg-feature-list li + li {
+  margin-top: 6px;
+}
+
+.reg-feature-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #22c55e;
+  font-size: 12px;
+}
+
+/* highlighted price inside features */
+.reg-highlight {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #b91c1c;
+  color: #fef2f2;
+  font-size: 11px;
+  margin-left: 2px;
+}
+
+/* footer line and CTA */
+.reg-footer {
+  border-top: 1px solid rgba(55, 65, 81, 0.9);
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.reg-price-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f97316;
+}
+
+/* CTA button – match site buttons but scoped */
+.reg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.reg-btn-primary {
+  background: #e11d48;
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(248, 113, 113, 0.4);
+  border: 1px solid #e11d48;
+}
+
+.reg-btn-primary:hover {
+  background: #be123c;
+  border-color: #be123c;
+}
+
+/* small tweaks on narrow screens */
+@media (max-width: 480px) {
+  .reg-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reg-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+

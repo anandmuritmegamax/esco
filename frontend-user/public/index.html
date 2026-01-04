@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dubai Escort Directory | Elite Companions in Dubai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Dubai escort directory featuring elite companions across Dubai Marina, Downtown, JBR, Business Bay, Palm Jumeirah and more. Browse verified profiles and book discreetly." />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/styles.css" />
+  <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/single-profile.css" />
+  <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/register-profile.css" />
+  <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/register.css" />
+</head>
+<body>
+    <div id="root"></div>
+   
+   <script>
+  // Simple mobile nav toggle (if legacy nav exists)
+  const navToggle = document.querySelector('.nav-toggle');
+  const mainNav = document.querySelector('.main-nav');
+
+  if (navToggle && mainNav) {
+    navToggle.addEventListener('click', () => {
+      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+      navToggle.setAttribute('aria-expanded', String(!expanded));
+      mainNav.classList.toggle('main-nav--open');
+    });
+  }
+
+  // Set year
+  const yearEl = document.getElementById('year');
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+
+  // === Main drawer menu (hamburger + user icon) ===
+  const drawer = document.getElementById('mainDrawer');
+  const menuToggles = document.querySelectorAll('.js-menu-toggle');
+
+  function toggleDrawer(forceClose) {
+    if (!drawer) return;
+    if (forceClose === true) {
+      drawer.classList.remove('is-open');
+    } else {
+      drawer.classList.toggle('is-open');
+    }
+  }
+
+  menuToggles.forEach((btn) => {
+    btn.addEventListener('click', () => toggleDrawer());
+  });
+
+  // === Location overlay ===
+  const locationToggle = document.getElementById('locationToggle');
+  const locationDropdown = document.querySelector('.location-dropdown');
+  const locationClose = document.querySelector('.location-close');
+
+  if (locationToggle && locationDropdown) {
+    locationToggle.addEventListener('click', () => {
+      locationDropdown.classList.toggle('open');
+    });
+
+    if (locationClose) {
+      locationClose.addEventListener('click', () => {
+        locationDropdown.classList.remove('open');
+      });
+    }
+
+    // Click on dark backdrop closes panel
+    locationDropdown.addEventListener('click', (e) => {
+      if (e.target === locationDropdown) {
+        locationDropdown.classList.remove('open');
+      }
+    });
+  }
+
+  // Close overlay + drawer on ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      toggleDrawer(true);
+      if (locationDropdown) {
+        locationDropdown.classList.remove('open');
+      }
+    }
+  });
+
+  // === FAQ accordion ===
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  faqItems.forEach((item) => {
+    const btn = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    if (!btn || !answer) return;
+
+    // If item marked is-open on load, set height
+    if (item.classList.contains('is-open')) {
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('is-open');
+
+      // close others (Ivy-style)
+      faqItems.forEach((it) => {
+        it.classList.remove('is-open');
+        const ans = it.querySelector('.faq-answer');
+        if (ans) ans.style.maxHeight = null;
+      });
+
+      // open this one
+      if (!isOpen) {
+        item.classList.add('is-open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"527c5c60a3fc4b658bce24c243b0cabe","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
+
+

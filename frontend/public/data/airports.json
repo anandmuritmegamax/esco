@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Indira Gandhi International Airport",
+    "city": "Delhi",
+    "country": "India",
+    "iata": "DEL",
+    "lat": 28.5665,
+    "lng": 77.1031
+  },
+  {
+    "name": "Chhatrapati Shivaji Maharaj International Airport",
+    "city": "Mumbai",
+    "country": "India",
+    "iata": "BOM",
+    "lat": 19.0896,
+    "lng": 72.8656
+  },
+  {
+    "name": "Kempegowda International Airport",
+    "city": "Bengaluru",
+    "country": "India",
+    "iata": "BLR",
+    "lat": 13.1986,
+    "lng": 77.7066
+  }
+]
