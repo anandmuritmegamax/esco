@@ -1,10 +1,23 @@
 // redux/api/modelApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const baseQueryWithAuth = fetchBaseQuery({
+    baseUrl: "/api/v1",
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+        }
+
+        return headers;
+    },
+});
+
 export const modelApi = createApi({
     reducerPath: "modelApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "/api/v1" }),
-    tagTypes: ["Models"],
+    baseQuery: baseQueryWithAuth,
+    tagTypes: ["Models", "Portfolio", "Booking", "Earning", "Availability"],
     endpoints: (builder) => ({
         getModels: builder.query({
             query: (params) => {
@@ -45,7 +58,7 @@ export const modelApi = createApi({
 
         getModelsAdmin: builder.query({
             query: () => "/admin/models",
-            providesTags: ["Model"],
+            providesTags: ["Models"],
         }),
 
         updateModelStatus: builder.mutation({
@@ -54,12 +67,103 @@ export const modelApi = createApi({
                 method: "PUT",
                 body: { status },
             }),
-            invalidatesTags: ["Model"],
+            invalidatesTags: ["Models"],
+        }),
+
+        /* ================= MODEL DASHBOARD ================= */
+        getModelDashboard: builder.query({
+            query: () => "/model/dashboard",
+            providesTags: ["Models"],
+        }),
+
+        /* ================= MODEL PROFILE ================= */
+        getModelProfile: builder.query({
+            query: () => "/model/profile",
+            providesTags: ["Models"],
+        }),
+
+        updateModelProfile: builder.mutation({
+            query: (body) => ({
+                url: "/model/profile",
+                method: "PUT",
+                body,
+            }),
+            invalidatesTags: ["Models"],
+        }),
+
+        /* ================= MODEL PORTFOLIO ================= */
+        getModelPortfolio: builder.query({
+            query: () => "/model/portfolio",
+            providesTags: ["Portfolio"],
+        }),
+
+        uploadMedia: builder.mutation({
+            query: (body) => ({
+                url: "/model/portfolio",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["Portfolio"],
+        }),
+
+        deleteMedia: builder.mutation({
+            query: (mediaId) => ({
+                url: `/model/portfolio/${mediaId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Portfolio"],
+        }),
+
+        /* ================= MODEL BOOKINGS ================= */
+        getModelBookings: builder.query({
+            query: () => "/model/bookings",
+            providesTags: ["Booking"],
+        }),
+
+        /* ================= MODEL EARNINGS ================= */
+        getModelEarnings: builder.query({
+            query: () => "/model/earnings",
+            providesTags: ["Earning"],
+        }),
+
+        /* ================= MODEL AVAILABILITY ================= */
+        getModelAvailability: builder.query({
+            query: () => "/model/availability",
+            providesTags: ["Availability"],
+        }),
+
+        updateModelAvailability: builder.mutation({
+            query: (body) => ({
+                url: "/model/availability",
+                method: "PUT",
+                body,
+            }),
+            invalidatesTags: ["Availability"],
+        }),
+
+        /* ================= PUBLIC ================= */
+        getPublicModels: builder.query({
+            query: (params) => {
+                const qs = new URLSearchParams(params || {}).toString();
+                return `/models?${qs}`;
+            },
+            providesTags: ["Models"],
+        }),
+
+        getPublicModelBySlug: builder.query({
+            query: (slug) => `/model/${slug}`,
+            providesTags: (result, error, slug) => [{ type: "Models", id: slug }],
         }),
     })
 });
 
 export const {
     useGetModelsQuery, useGetModelQuery, useCreateModelMutation, useUpdateModelMutation,
-    useDeleteModelMutation, useSaveProfileMutation, useSavePortfolioMutation, useDeletePortfolioImageMutation, useGetModelsAdminQuery, useUpdateModelStatusMutation
+    useDeleteModelMutation, useSaveProfileMutation, useSavePortfolioMutation, useDeletePortfolioImageMutation,
+    useGetModelsAdminQuery, useUpdateModelStatusMutation,
+    useGetModelDashboardQuery, useGetModelProfileQuery, useUpdateModelProfileMutation,
+    useGetModelPortfolioQuery, useUploadMediaMutation, useDeleteMediaMutation,
+    useGetModelBookingsQuery, useGetModelEarningsQuery,
+    useGetModelAvailabilityQuery, useUpdateModelAvailabilityMutation,
+    useGetPublicModelsQuery, useGetPublicModelBySlugQuery,
 } = modelApi;

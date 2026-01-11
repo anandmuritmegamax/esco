@@ -20,6 +20,7 @@ import UserApprovalList from "../pages/admin/users/UserApprovalList";
 import AdminAgencyApproval from "../admin/agencies/AdminAgencyApproval";
 import AgencyList from "../admin/agencies/AgencyList";
 import ClientList from "../admin/clients/ClientList";
+import Logout from "../../pages/Logout";
 
 const adminRoutes = () => {
   return (
@@ -137,6 +138,8 @@ const adminRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route path="/logout" element={<Logout />} />
 
       {/* <Route
         path="/admin/settings"

@@ -32,8 +32,6 @@ import roleRoutes from './routes/role.js';
 import flightRoutes from './routes/flightRoutes.js';
 import flightTypeRoutes from './routes/flightTypeRoutes.js';
 import airportRoutes from './routes/airportRoutes.js';
-import bookingRoutes from './routes/bookingRoutes.js';
-import leadRoutes from './routes/leadRoutes.js';
 import facilityRoutes from './routes/facilityRoutes.js';
 import flightCategoryRoutes from './routes/flightCategoryRoutes.js';
 import pilotRoutes from './routes/pilotRoutes.js';
@@ -43,6 +41,7 @@ import s3Routes from "./routes/s3Routes.js";
 import agencyRoutes from "./routes/agencyRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 //import authUserRoutes from './routes/authRoutes.js';
+import homeRoutes from "./routes/homeRoutes.js";
 
 // Mount routes
 const routes = [
@@ -55,14 +54,13 @@ const routes = [
     flightRoutes,
     flightTypeRoutes,
     airportRoutes,
-    bookingRoutes,
-    leadRoutes,
     facilityRoutes,
     priceSettingRoutes,
     modelRoutes,
     s3Routes,
     agencyRoutes,
     clientRoutes,
+    homeRoutes,
     //authUserRoutes,
 ];
 

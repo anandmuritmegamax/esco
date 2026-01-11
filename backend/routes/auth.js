@@ -1,23 +1,55 @@
-import express from 'express';
-import { createRole, deleteUser, forgotPassword, getAllPermissions, getAllUsers, getRoles, getUserDetails, getUserProfile, loginUser, logoutUser, registerUser, resetPassword, updatePassword, updateProfile, updateUserDetails, uploadAvatar } from '../controllers/authControllers.js';
-import { authorizeRoles, isAuthenticatedUser } from '../middlewares/auth.js';
+// routes/auth.js or wherever your protected routes are
+
+import express from "express";
+import {
+    getUserProfile,
+    updatePassword,
+    updateProfile,
+    logoutUser,
+    uploadAvatar,
+    getAllUsers,
+    login, // admin only
+} from "../controllers/authControllers.js";
+
+import {
+    isAuthenticatedUser,
+    authorizeRoles,
+} from "../middlewares/auth.js";
+
 const router = express.Router();
 
-router.route('/register').post(registerUser)
-router.route('/admin/roles').post(isAuthenticatedUser, authorizeRoles('admin'), createRole);
-router.route('/login').post(loginUser);
-router.route('/password/forgot').post(forgotPassword);
-router.route('/password/reset/:token').put(resetPassword);
-router.route('/me').get(isAuthenticatedUser, getUserProfile);
-router.route('/password/update').put(isAuthenticatedUser, updatePassword);
-router.route('/me/update').put(isAuthenticatedUser, updateProfile);
-router.route('/me/upload_avatar').put(isAuthenticatedUser, uploadAvatar);
-router.route('/admin/users').get(isAuthenticatedUser, authorizeRoles('admin'), getAllUsers);
-router.route('/admin/permissions').get(isAuthenticatedUser, authorizeRoles('admin'), getAllPermissions);
-router.route('/admin/roles').get(isAuthenticatedUser, authorizeRoles('admin'), getRoles);
-router.route('/admin/user/:id').get(isAuthenticatedUser, authorizeRoles('admin'), getUserDetails)
-    .put(isAuthenticatedUser, authorizeRoles('admin'), updateUserDetails)
-    .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteUser);
-router.route('/logout').get(logoutUser);
+// Public routes
+router.route("/login").post(login);
+router.route("/logout").post(logoutUser);
+
+// Protected routes - All authenticated users
+router.route("/me").get(isAuthenticatedUser, getUserProfile);
+router.route("/password/update").put(isAuthenticatedUser, updatePassword);
+router.route("/me/update").put(isAuthenticatedUser, updateProfile);
+router.route("/me/upload_avatar").put(isAuthenticatedUser, uploadAvatar);
+
+// Admin only routes
+router
+    .route("/admin/users")
+    .get(isAuthenticatedUser, authorizeRoles("admin"), getAllUsers);
+
+// Example: Agency & Model can access their own dashboard
+router
+    .route("/agency/dashboard")
+    .get(isAuthenticatedUser, authorizeRoles("agency"), (req, res) => {
+        res.json({ message: "Welcome to Agency Dashboard" });
+    });
+
+router
+    .route("/model/dashboard")
+    .get(isAuthenticatedUser, authorizeRoles("model"), (req, res) => {
+        res.json({ message: "Welcome to Model Dashboard" });
+    });
+
+router
+    .route("/client/dashboard")
+    .get(isAuthenticatedUser, authorizeRoles("client"), (req, res) => {
+        res.json({ message: "Welcome to Client Dashboard" });
+    });
 
 export default router;

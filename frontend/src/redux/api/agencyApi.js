@@ -1,9 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const baseQueryWithAuth = fetchBaseQuery({
+    baseUrl: "/api/v1",
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+        }
+
+        return headers;
+    },
+});
+
 export const agencyApi = createApi({
     reducerPath: "agencyApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "/api/v1" }),
-    tagTypes: ["Agency"],
+    baseQuery: baseQueryWithAuth,
+    tagTypes: ["Agency", "Model", "Booking", "Earning"],
     endpoints: (builder) => ({
         /* ================= ADMIN LIST ================= */
         getAgenciesAdmin: builder.query({
@@ -55,6 +68,55 @@ export const agencyApi = createApi({
             }),
             invalidatesTags: ["Agency"],
         }),
+
+        /* ================= AGENCY DASHBOARD ================= */
+        getAgencyDashboard: builder.query({
+            query: () => "/agency/dashboard",
+            providesTags: ["Agency"],
+        }),
+
+        /* ================= AGENCY PROFILE ================= */
+        getAgencyProfile: builder.query({
+            query: () => "/agency/profile",
+            providesTags: ["Agency"],
+        }),
+
+        updateAgencyProfile: builder.mutation({
+            query: (body) => ({
+                url: "/agency/profile",
+                method: "PUT",
+                body,
+            }),
+            invalidatesTags: ["Agency"],
+        }),
+
+        /* ================= AGENCY MODELS ================= */
+        getAgencyModels: builder.query({
+            query: () => "/agency/models",
+            providesTags: ["Model"],
+        }),
+
+        /* ================= ADD MODEL ================= */
+        addModel: builder.mutation({
+            query: (body) => ({
+                url: "/agency/models",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["Model"],
+        }),
+
+        /* ================= AGENCY BOOKINGS ================= */
+        getAgencyBookings: builder.query({
+            query: () => "/agency/bookings",
+            providesTags: ["Booking"],
+        }),
+
+        /* ================= AGENCY EARNINGS ================= */
+        getAgencyEarnings: builder.query({
+            query: () => "/agency/earnings",
+            providesTags: ["Earning"],
+        }),
     }),
 });
 
@@ -65,4 +127,11 @@ export const {
     useUpdateAgencyMutation,
     useUpdateAgencyStatusMutation,
     useDeleteAgencyMutation,
+    useGetAgencyDashboardQuery,
+    useGetAgencyProfileQuery,
+    useUpdateAgencyProfileMutation,
+    useGetAgencyModelsQuery,
+    useAddModelMutation,
+    useGetAgencyBookingsQuery,
+    useGetAgencyEarningsQuery,
 } = agencyApi;

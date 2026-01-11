@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.post("/auth/login", form);
+      const res = await axios.post("/login", form);
 
       setAuth(res.data);
       toast.success("Login successful");

@@ -32,6 +32,7 @@ import ClientRegister from "./pages/auth/ClientRegister";
 import { Toaster } from "react-hot-toast";
 import ModelDetail from "./pages/model/ModelDetail";
 import Profile from "./pages/Profile";
+import Pricing from "./pages/Pricing";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path="/register/model" element={<ModelRegister />} />
           <Route path="/register/agency" element={<AgencyRegister />} />
           <Route path="/models/:slug" element={<ModelDetail />} />
+          <Route path="/pricing" element={<Pricing />} />
 
           {/* Model */}
           <Route

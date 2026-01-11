@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs"; // Add this import
 
 const AgencySchema = new mongoose.Schema(
     {
@@ -24,5 +25,14 @@ const AgencySchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+// Add pre-save hook for password hashing
+AgencySchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        next();
+    }
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 export default mongoose.model("Agency", AgencySchema);

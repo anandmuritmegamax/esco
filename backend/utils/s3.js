@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
-
+console.log("AWS S3 Utility Loaded", process.env.AWS_S3_BUCKET);
+console.log("AWS Region:", process.env.AWS_REGION);
 AWS.config.update({
     region: process.env.AWS_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY,

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
+import bcrypt from "bcryptjs"; // Add this import
 /* MEDIA SCHEMA */
 const MediaSchema = new mongoose.Schema(
     {
@@ -79,13 +80,31 @@ const ModelSchema = new mongoose.Schema(
             enum: ["pending", "approved", "rejected"],
             default: "pending",
         },
+        listing_type: {
+            type: String,
+            enum: ["new", "gold", "diamond"],
+            default: "new",
+        },
         slug: {
             type: String,
             unique: true,
             index: true,
         },
+        agencyId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Agency",
+        },
     },
     { timestamps: true }
 );
+
+// Add pre-save hook for password hashing
+ModelSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        next();
+    }
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 export default mongoose.model("Model", ModelSchema);

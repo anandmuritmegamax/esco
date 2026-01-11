@@ -7,59 +7,113 @@ import {
     updateAgencyAdmin,
     deleteAgencyAdmin,
     getPendingAgencies,
+    getAgencyDashboard,
+    getAgencyProfile,
+    updateAgencyProfile,
+    getAgencyModels,
+    addModel,
+    getAgencyBookings,
+    getAgencyEarnings,
 } from "../controllers/agencyController.js";
 
-// OPTIONAL AUTH
-// import { isAuthenticatedUser, authorizeRoles } from "../middlewares/auth.js";
+import { isAuthenticatedUser, authorizeRoles } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 /* ===== PUBLIC ===== */
 router.post("/agencies/register", registerAgency);
 
+/* ===== AGENCY ===== */
 router.get(
-    "/admin/agencies/pending",
-    // isAuthenticatedUser,
-    // authorizeRoles("admin"),
-    getPendingAgencies
+    "/agency/dashboard",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    getAgencyDashboard
+);
+
+router.get(
+    "/agency/profile",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    getAgencyProfile
+);
+
+router.put(
+    "/agency/profile",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    updateAgencyProfile
+);
+
+router.get(
+    "/agency/models",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    getAgencyModels
+);
+
+router.post(
+    "/agency/models",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    addModel
+);
+
+router.get(
+    "/agency/bookings",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    getAgencyBookings
+);
+
+router.get(
+    "/agency/earnings",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    getAgencyEarnings
 );
 
 /* ===== ADMIN ===== */
 router.get(
+    "/admin/agencies/pending",
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
+    getPendingAgencies
+);
+
+router.get(
     "/admin/agencies",
-    // isAuthenticatedUser,
-    // authorizeRoles("admin"),
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
     getAgenciesAdmin
 );
 
 router.get(
     "/admin/agencies/:id",
-    // isAuthenticatedUser,
-    // authorizeRoles("admin"),
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
     getAgencyByIdAdmin
 );
 
 router.put(
     "/admin/agencies/:id/status",
-    // isAuthenticatedUser,
-    // authorizeRoles("admin"),
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
     updateAgencyStatus
 );
 
 router.put(
     "/admin/agencies/:id",
-    // isAuthenticatedUser,
-    // authorizeRoles("admin"),
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
     updateAgencyAdmin
 );
 
 router.delete(
     "/admin/agencies/:id",
-    // isAuthenticatedUser,
-    // authorizeRoles("admin"),
+    isAuthenticatedUser,
+    authorizeRoles("admin"),
     deleteAgencyAdmin
 );
-
-
 
 export default router;

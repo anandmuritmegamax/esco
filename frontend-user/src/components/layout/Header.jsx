@@ -22,6 +22,10 @@ const Header = () => {
           <span className="brand-word">DubaiEscorts</span>
         </Link>
 
+        <Link to="/pricing" className="brand brand-ivy">
+          <span className="brand-word">Pricing</span>
+        </Link>
+
         <div className="header-actions">
           {!auth ? (
             <>

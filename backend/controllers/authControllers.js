@@ -1,3 +1,4 @@
+// Controller file (e.g., userController.js or authController.js - unchanged, as no issues found)
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import User from "../models/user.js";
 import Role from "../models/role.js";
@@ -9,109 +10,104 @@ import crypto from "crypto";
 import { delete_file, upload_file } from "../utils/cloudinary.js";
 import Permission from "../models/permission.js";
 
-
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Client from "../models/Client.js";
 import Agency from "../models/Agency.js";
 import Model from "../models/Model.js";
 
-
-const signToken = (user) =>
+const signToken = (id, role) =>
     jwt.sign(
-        { id: user._id, role: user.role },
+        { id, role },
         process.env.JWT_SECRET,
         { expiresIn: "7d" }
     );
 
-export const login = async (req, res) => {
+// Unified Login (handles admin/User, client, agency, model)
+export const login = catchAsyncErrors(async (req, res, next) => {
     const { identifier, password } = req.body;
 
-    // Try all user types
-    const user =
-        (await Client.findOne({
-            $or: [{ email: identifier }, { username: identifier }],
-        })) ||
-        (await Agency.findOne({
-            $or: [{ email: identifier }, { username: identifier }],
-        })) ||
-        (await Model.findOne({
-            $or: [{ email: identifier }, { username: identifier }],
-        }));
+    if (!identifier || !password) {
+        return next(new ErrorHandler("Please provide identifier and password", 400));
+    }
+
+    // Try all user types (User first for admin, then others)
+    let user = await User.findOne({ email: identifier }).select("+password").populate("role");
+    let isAdmin = !!user; // Flag for admin (User model)
 
     if (!user) {
-        return res.status(401).json({
-            success: false,
-            message: "Invalid credentials",
+        user = await Client.findOne({
+            $or: [{ email: identifier }, { username: identifier }],
         });
+        if (!user) {
+            user = await Agency.findOne({
+                $or: [{ email: identifier }, { username: identifier }],
+            });
+            if (!user) {
+                user = await Model.findOne({
+                    $or: [{ email: identifier }, { username: identifier }],
+                });
+            }
+        }
+    }
+    if (!user) {
+        return next(new ErrorHandler("Invalid credentials", 401));
     }
 
-    if (user.status !== "approved") {
-        return res.status(403).json({
-            success: false,
-            message: "Account pending approval",
-        });
+    // Check status for non-admin users
+    if (!isAdmin && user.status !== "approved") {
+        return next(new ErrorHandler("Account pending approval", 403));
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    // Compare password
+    let isMatch;
+    if (isAdmin) {
+        isMatch = await user.comparePassword(password);
+    } else {
+        isMatch = await bcrypt.compare(password, user.password);
+    }
+    console.log("is password match:", isMatch);
     if (!isMatch) {
-        return res.status(401).json({
-            success: false,
-            message: "Invalid credentials",
-        });
+        return next(new ErrorHandler("Invalid credentials", 401));
     }
 
-    const role =
-        user.constructor.modelName.toLowerCase(); // client / agency / model
+    // Determine role
+    let role;
+    if (isAdmin) {
+        role = user.role ? user.role.name.toLowerCase() : "admin"; // Use populated role.name or default to 'admin'
+    } else {
+        role = user.constructor.modelName.toLowerCase(); // client, agency, model
+    }
 
-    const token = signToken({ _id: user._id, role });
+    // Generate token
+    const token = signToken(user._id, role);
 
-    res.json({
+    // Determine display name based on user type
+    let name = "";
+    const modelName = user.constructor.modelName.toLowerCase();
+    if (modelName === "user") {
+        name = user.name;
+    } else if (modelName === "client") {
+        name = user.name;
+    } else if (modelName === "agency") {
+        name = user.agencyName;
+    } else if (modelName === "model") {
+        name = user.stageName || user.username;
+    }
+
+    res.status(200).json({
         success: true,
         token,
         user: {
             id: user._id,
             role,
-            name: user.name || user.agencyName || user.stageName,
+            name,
         },
     });
-};
-
-
-// 1. Login User => /api/v1/login
-export const loginUser = catchAsyncErrors(async (req, res, next) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ success: false, message: "Please provide email and password" });
-    }
-
-    // Check if user exists
-    const user = await User.findOne({ email }).select("+password").populate('role');
-    if (!user) {
-        return res.status(401).json({ success: false, message: "Invalid email or password" });
-    }
-    // Check if password matches
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-        return res.status(401).json({ success: false, message: "Invalid email or password" });
-    }
-    // Generate token (assuming you have a method to generate JWT)
-    // const token = user.getJwtToken();
-    // res.status(200).json({
-    //     success: true,
-    //     message: "User logged in successfully",
-    //     user: {
-    //         id: user._id,
-    //         name: user.name,
-    //         email: user.email,
-    //         role: user.role.name, // Assuming role is populated
-    //     },
-    //     token, // Return the JWT token
-    // });
-
-    sendToken(user, res); // Send token in response
 });
+
+// ... (rest of the controller remains the same: registerUser, createRole, getRoles, etc.)
+// Note: If you have sendToken that sets cookies, you can call it here instead of res.json, but I've kept it as JSON for consistency with your original login.
 
 // 2. Register User => /api/v1/register
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -261,17 +257,22 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
 
 //Get current user profile  =>  /api/v1/me
 export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
-    const user = await User.findById(req?.user?._id).populate({
-        path: "role",
-        populate: {
-            path: "permissions",
-        },
-    });
+    let user = req.user;
+
+    // Only admin needs extra population
+    if (req.role === "admin") {
+        user = await User.findById(req.user._id)
+            .populate({
+                path: "role",
+                populate: { path: "permissions" },
+            });
+    }
 
     res.status(200).json({
         user,
-    })
-})
+        role: req.role,   // helpful for frontend
+    });
+});
 
 //Update Password  =>  /api/v1/password/update
 export const updatePassword = catchAsyncErrors(async (req, res, next) => {

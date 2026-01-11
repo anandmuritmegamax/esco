@@ -1,65 +1,43 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { userApi } from "./userApi";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+const baseQueryWithAuth = fetchBaseQuery({
+    baseUrl: "/api/v1",
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+        }
+
+        return headers;
+    },
+});
 
 export const authApi = createApi({
     reducerPath: "authApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "/api/v1"
-    }),
+    baseQuery: baseQueryWithAuth,
     endpoints: (builder) => ({
-        register: builder.mutation({
-            query(body) {
-                return {
-                    url: "/register",
-                    method: 'POST',
-                    body,
-                };
-            },
-            async onQueryStarted(args, { dispatch, queryFulfilled }) {
-                try {
-                    await queryFulfilled;
-                    await dispatch(userApi.endpoints.getMe.initiate(null));
-                } catch (error) {
-                    console.log(error)
-                }
-            },
-        }),
         login: builder.mutation({
-            query(body) {
-                return {
-                    url: "/login",
-                    method: 'POST',
-                    body,
-                };
-            },
-            async onQueryStarted(args, { dispatch, queryFulfilled }) {
-                try {
-                    await queryFulfilled;
-                    await dispatch(userApi.endpoints.getMe.initiate(null));
-                } catch (error) {
-                    console.log(error)
-                }
-            },
+            query: ({ identifier, password }) => ({
+                url: "/login",
+                method: "POST",
+                body: { identifier, password },
+            }),
+        }),
+        register: builder.mutation({
+            query: (body) => ({
+                url: "/register",
+                method: "POST",
+                body,
+            }),
+        }),
+        getProfile: builder.query({
+            query: () => "/me",
         }),
         logout: builder.query({
             query: () => "/logout",
         }),
+    }),
+});
 
-        sendOtp: builder.mutation({
-            query: (data) => ({
-                url: "/send-otp",
-                method: "POST",
-                body: data, // { email } or { phone }
-            }),
-        }),
-        verifyOtp: builder.mutation({
-            query: (data) => ({
-                url: "/verify-otp",
-                method: "POST",
-                body: data, // { email/phone, otp }
-            }),
-        }),
-    })
-})
-
-export const { useLoginMutation, useRegisterMutation, useLazyLogoutQuery, useSendOtpMutation, useVerifyOtpMutation } = authApi;
+export const { useLoginMutation, useGetProfileQuery, useLazyLogoutQuery, useRegisterMutation } = authApi;

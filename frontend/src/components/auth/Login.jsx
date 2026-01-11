@@ -5,26 +5,44 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const [login, { isLoading, error }] = useLoginMutation();
-  const { isAuthenticated } = useSelector((state) => state.auth);
-
+  const [login, { data, isLoading, error }] = useLoginMutation();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  console.log("isAuthenticated:", isAuthenticated);
+  console.log("user:", user);
+  console.log("login data:", data);
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user?.role) {
       toast.success("Login Successful");
-      navigate("/admin/dashboard");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      const role = user.role.toLowerCase();
+
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "client") {
+        navigate("/client/dashboard");
+      } else if (role === "agency") {
+        navigate("/agency/dashboard");
+      } else if (role === "model") {
+        navigate("/model/dashboard");
+      } else {
+        navigate("/dashboard"); // fallback
+      }
     }
+
     if (error) {
       toast.error(error?.data?.message || "Login failed");
     }
-  }, [error, navigate, isAuthenticated]);
+  }, [isAuthenticated, user, error, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    login({ email, password, isAdminLogin: true });
+    login({ identifier, password }); // Backend expects 'identifier' now
   };
 
   return (
@@ -47,16 +65,16 @@ const Login = () => {
 
             <form onSubmit={submitHandler}>
               <div className="mb-3">
-                <label htmlFor="email_field" className="form-label">
-                  Email address
+                <label htmlFor="identifier_field" className="form-label">
+                  Email or Username
                 </label>
                 <input
-                  type="email"
-                  id="email_field"
+                  type="text"
+                  id="identifier_field"
                   className="form-control form-control-lg"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email or username"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   required
                 />
               </div>
