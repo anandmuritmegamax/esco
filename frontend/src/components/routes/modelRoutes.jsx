@@ -8,6 +8,10 @@ import ModelPortfolio from "../../pages/model/Portfolio";
 import ModelBookings from "../../pages/model/Bookings";
 import ModelEarnings from "../../pages/model/Earnings";
 import ModelAvailability from "../../pages/model/Availability";
+import ModelReviewsList from "../../pages/model/ModelReviewsList";
+import ModelReportsList from "../../pages/model/ModelReportsList";
+import ModelReviewView from "../../pages/model/ModelReviewView";
+import ModelReportView from "../../pages/model/ModelReportView";
 
 const useModelRoutes = () => {
   return (
@@ -36,6 +40,26 @@ const useModelRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/model/reviews"
+        element={
+          <ProtectedRoute allowedRoles={["model"]}>
+            <ModelReviewsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/model/reviews/:id" element={<ModelReviewView />} />
+
+      <Route
+        path="/model/reports"
+        element={
+          <ProtectedRoute allowedRoles={["model"]}>
+            <ModelReportsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/model/reports/:id" element={<ModelReportView />} />
+
       <Route
         path="/model/bookings"
         element={

@@ -1,23 +1,37 @@
 import nodemailer from "nodemailer";
+import getSettingsByGroup from "./getSettingsByGroup.js";
 
-const sendEmail = async (options) => {
-    const transport = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        auth: {
-            user: process.env.SMTP_EMAIL,
-            pass: process.env.SMTP_PASSWORD,
-        },
-    });
+const sendEmail = async ({ to, subject, html }) => {
+    const emailSettings = await getSettingsByGroup("email");
 
-    const message = {
-        from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
-        to: options.email,
-        subject: options.subject,
-        html: options.message
+    // 🛑 Kill switch
+    if (emailSettings["email.disableEmails"]) {
+        console.log("📧 Emails disabled by admin");
+        return;
+    }
+
+    const transporterConfig = {
+        host: emailSettings["email.smtpHost"],
+        port: Number(emailSettings["email.smtpPort"]),
+        secure: Number(emailSettings["email.smtpPort"]) === 465, // SSL only for 465
     };
 
-    await transport.sendMail(message);
-}
+    // ✅ Add auth ONLY if provided
+    if (emailSettings["email.smtpUser"]) {
+        transporterConfig.auth = {
+            user: emailSettings["email.smtpUser"],
+            pass: emailSettings["email.smtpPass"],
+        };
+    }
+
+    const transporter = nodemailer.createTransport(transporterConfig);
+
+    await transporter.sendMail({
+        from: emailSettings["email.fromEmail"] || emailSettings["email.smtpUser"],
+        to,
+        subject,
+        html,
+    });
+};
 
 export default sendEmail;

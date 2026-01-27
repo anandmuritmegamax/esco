@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 
-export const connectDatabase = () => {
-    let DB_URI = "";
-    if (process.env.NODE_ENV === "production") {
-        DB_URI = process.env.DB_URI
-    }
-    if (process.env.NODE_ENV === "development") {
-        DB_URI = process.env.DB_LOCAL_URI
-    }
+// 🔒 Disable buffering (prevents this error forever)
+mongoose.set("bufferCommands", false);
 
-    mongoose.connect(DB_URI).then((con) => {
-        console.log(`MongoDB Database connected with HOST: ${con?.connection?.host}`);
-    });
+export const connectDatabase = async () => {
+    try {
+        await mongoose.connect(process.env.DB_LOCAL_URI);
+        console.log("✅ MongoDB connected");
+    } catch (err) {
+        console.error("❌ MongoDB connection failed:", err.message);
+        process.exit(1);
+    }
 };

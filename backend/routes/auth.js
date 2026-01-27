@@ -40,11 +40,11 @@ router
         res.json({ message: "Welcome to Agency Dashboard" });
     });
 
-router
-    .route("/model/dashboard")
-    .get(isAuthenticatedUser, authorizeRoles("model"), (req, res) => {
-        res.json({ message: "Welcome to Model Dashboard" });
-    });
+// router
+//     .route("/model/dashboard")
+//     .get(isAuthenticatedUser, authorizeRoles("model"), (req, res) => {
+//         res.json({ message: "Welcome to Model Dashboard" });
+//     });
 
 router
     .route("/client/dashboard")

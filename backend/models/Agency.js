@@ -16,6 +16,15 @@ const AgencySchema = new mongoose.Schema(
         city: String,
         about: String,
 
+        emailVerified: {
+            type: Boolean,
+            default: false,
+        },
+        emailOtp: {
+            code: String,
+            expiresAt: Date,
+        },
+
         /* STATUS */
         status: {
             type: String,
@@ -29,7 +38,7 @@ const AgencySchema = new mongoose.Schema(
 // Add pre-save hook for password hashing
 AgencySchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
-        next();
+        return next();
     }
     this.password = await bcrypt.hash(this.password, 10);
     next();

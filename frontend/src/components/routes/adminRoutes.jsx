@@ -21,6 +21,10 @@ import AdminAgencyApproval from "../admin/agencies/AdminAgencyApproval";
 import AgencyList from "../admin/agencies/AgencyList";
 import ClientList from "../admin/clients/ClientList";
 import Logout from "../../pages/Logout";
+import ReviewList from "../admin/ReviewList";
+import ReportList from "../admin/ReportList";
+import AgencyEditModel from "../../pages/agency/AgencyEditModel";
+import PagesList from "../admin/pages/PagesList";
 
 const adminRoutes = () => {
   return (
@@ -114,6 +118,32 @@ const adminRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/agency/models/:id/edit"
+        element={
+          <ProtectedRoute>
+            <AgencyEditModel />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/reviews"
+        element={
+          <ProtectedRoute>
+            <ReviewList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reports"
+        element={
+          <ProtectedRoute>
+            <ReportList />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/admin/agencies"
         element={
@@ -135,6 +165,15 @@ const adminRoutes = () => {
         element={
           <ProtectedRoute>
             <PricingList />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/pages"
+        element={
+          <ProtectedRoute>
+            <PagesList />
           </ProtectedRoute>
         }
       />

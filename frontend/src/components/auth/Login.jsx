@@ -1,27 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLoginMutation } from "../../redux/api/authApi";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const [login, { data, isLoading, error }] = useLoginMutation();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  console.log("isAuthenticated:", isAuthenticated);
-  console.log("user:", user);
-  console.log("login data:", data);
-  useEffect(() => {
-    if (isAuthenticated && user?.role) {
+  const [login, { isLoading }] = useLoginMutation();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      // ✅ unwrap gives you direct response
+      const data = await login({ identifier, password }).unwrap();
+
       toast.success("Login Successful");
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
 
-      const role = user.role.toLowerCase();
+      // ✅ STORE AUTH IN ONE PLACE (IMPORTANT)
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          success: true,
+          token: data.token,
+          user: data.user,
+        }),
+      );
 
+      const role = data.user?.role?.toLowerCase();
+      console.log("role", role);
+
+      // ✅ ROLE BASED REDIRECT
       if (role === "admin") {
         navigate("/admin/dashboard");
       } else if (role === "client") {
@@ -31,18 +42,11 @@ const Login = () => {
       } else if (role === "model") {
         navigate("/model/dashboard");
       } else {
-        navigate("/dashboard"); // fallback
+        navigate("/dashboard");
       }
+    } catch (err) {
+      toast.error(err?.data?.message || "Login failed");
     }
-
-    if (error) {
-      toast.error(error?.data?.message || "Login failed");
-    }
-  }, [isAuthenticated, user, error, navigate]);
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    login({ identifier, password }); // Backend expects 'identifier' now
   };
 
   return (
@@ -52,25 +56,19 @@ const Login = () => {
           <div className="card-body p-4">
             <div className="text-center mb-3">
               <img
-                src="../assets/img/logo.png" // replace with your logo path
+                src="../assets/img/logo.png"
                 alt="Logo"
-                style={{
-                  width: "300px",
-                  height: "80px",
-                  objectFit: "contain",
-                }}
+                style={{ width: "300px", height: "80px", objectFit: "contain" }}
               />
             </div>
+
             <h3 className="text-center mb-3">Welcome Back 👋</h3>
 
             <form onSubmit={submitHandler}>
               <div className="mb-3">
-                <label htmlFor="identifier_field" className="form-label">
-                  Email or Username
-                </label>
+                <label className="form-label">Email or Username</label>
                 <input
                   type="text"
-                  id="identifier_field"
                   className="form-control form-control-lg"
                   placeholder="Enter your email or username"
                   value={identifier}
@@ -80,12 +78,9 @@ const Login = () => {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="password_field" className="form-label">
-                  Password
-                </label>
+                <label className="form-label">Password</label>
                 <input
                   type="password"
-                  id="password_field"
                   className="form-control form-control-lg"
                   placeholder="Enter your password"
                   value={password}
@@ -94,11 +89,8 @@ const Login = () => {
                 />
               </div>
 
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <Link
-                  to="/password/forgot"
-                  className="text-decoration-none small"
-                >
+              <div className="d-flex justify-content-between mb-3">
+                <Link to="/password/forgot" className="small">
                   Forgot Password?
                 </Link>
               </div>
@@ -111,13 +103,6 @@ const Login = () => {
                 {isLoading ? "Authenticating..." : "Login"}
               </button>
             </form>
-
-            {/* <div className="text-center mt-3">
-              <span className="text-muted small">New here? </span>
-              <Link to="/register" className="text-decoration-none">
-                Create an account
-              </Link>
-            </div> */}
           </div>
         </div>
       </div>

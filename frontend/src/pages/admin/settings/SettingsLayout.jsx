@@ -10,6 +10,7 @@ import EmailSettings from "./EmailSettings";
 import SecuritySettings from "./SecuritySettings";
 import LegalSettings from "./LegalSettings";
 import FeatureSettings from "./FeatureSettings";
+import AwsSettings from "./AwsSettings";
 
 export default function SettingsLayout() {
   const { section } = useParams();
@@ -26,6 +27,7 @@ export default function SettingsLayout() {
     security: <SecuritySettings />,
     legal: <LegalSettings />,
     features: <FeatureSettings />,
+    aws: <AwsSettings />,
   };
 
   if (!sections[section]) {

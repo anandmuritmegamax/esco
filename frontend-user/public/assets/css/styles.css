@@ -75,21 +75,21 @@ h6 {
   letter-spacing: 0.01em;
 }
 
-/* Main page heading: 28–32px, bold */
+/* Main page heading: 28ï¿½32px, bold */
 h1 {
   font-size: 32px;
   font-weight: 700;
   line-height: 1.3;
 }
 
-/* Section titles: ~20–22px, semibold */
+/* Section titles: ~20ï¿½22px, semibold */
 h2 {
   font-size: 22px;
   font-weight: 600;
   line-height: 1.3;
 }
 
-/* Subheadings: 17–18px, medium/bold */
+/* Subheadings: 17ï¿½18px, medium/bold */
 h3 {
   font-size: 18px;
   font-weight: 600;
@@ -109,7 +109,7 @@ h6 {
   line-height: 1.4;
 }
 
-/* Paragraphs: 15–16px, 1.6 line-height */
+/* Paragraphs: 15ï¿½16px, 1.6 line-height */
 p {
   margin: 0 0 10px;
   font-size: 15px;
@@ -448,7 +448,7 @@ a:hover {
   margin-bottom: 16px;
 }
 
-/* Acts like subheading: 17–18px */
+/* Acts like subheading: 17ï¿½18px */
 .location-modal-title {
   display: inline-flex;
   align-items: center;
@@ -1278,7 +1278,7 @@ a:hover {
   }
 }
 
-/* New & Trending – 6 cards per row */
+/* New & Trending ï¿½ 6 cards per row */
 
 .profiles-grid.profiles-grid--six {
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -1628,7 +1628,7 @@ a:hover {
   height: 18px;
 }
 
-/* "All escorts" – group of people */
+/* "All escorts" ï¿½ group of people */
 .drawer-icon--all span::before,
 .drawer-icon--all span::after {
   content: "";
@@ -1650,7 +1650,7 @@ a:hover {
   border-top-color: transparent;
 }
 
-/* "Locations" – pin */
+/* "Locations" ï¿½ pin */
 .drawer-icon--location span::before,
 .drawer-icon--location span::after {
   content: "";
@@ -1673,7 +1673,7 @@ a:hover {
   left: 7.5px;
 }
 
-/* "BDSM" – chat bubble */
+/* "BDSM" ï¿½ chat bubble */
 .drawer-icon--bdsm span::before,
 .drawer-icon--bdsm span::after {
   content: "";
@@ -1694,7 +1694,7 @@ a:hover {
   transform: rotate(35deg);
 }
 
-/* "Escort reviews" – card with star */
+/* "Escort reviews" ï¿½ card with star */
 .drawer-icon--reviews span::before,
 .drawer-icon--reviews span::after {
   content: "";
@@ -1715,7 +1715,7 @@ a:hover {
   border-bottom: 6px solid currentColor;
 }
 
-/* "Escort announcements" – megaphone */
+/* "Escort announcements" ï¿½ megaphone */
 .drawer-icon--announcements span::before,
 .drawer-icon--announcements span::after {
   content: "";
@@ -1737,7 +1737,7 @@ a:hover {
   border-left-color: transparent;
 }
 
-/* "Blog & Escort Journals" – document */
+/* "Blog & Escort Journals" ï¿½ document */
 .drawer-icon--blog span::before,
 .drawer-icon--blog span::after {
   content: "";
@@ -1757,7 +1757,7 @@ a:hover {
   border-bottom: 1.6px solid currentColor;
 }
 
-/* "Advertiser sign up" – little board */
+/* "Advertiser sign up" ï¿½ little board */
 .drawer-icon--advertiser span::before,
 .drawer-icon--advertiser span::after {
   content: "";
@@ -1777,7 +1777,7 @@ a:hover {
   border: 1.6px solid currentColor;
 }
 
-/* "Client sign up" – text only */
+/* "Client sign up" ï¿½ text only */
 .drawer-icon--client {
   font-size: 11px;
   font-weight: 600;
@@ -1866,7 +1866,7 @@ a:hover {
   overflow: visible;
 }
 
-/* Subheadings inside about: 17–18px bold */
+/* Subheadings inside about: 17ï¿½18px bold */
 .about-heading {
   font-size: 18px;
   font-weight: 600;
@@ -1930,7 +1930,7 @@ a:hover {
   border-bottom: none;
 }
 
-/* question row – behaves like subheading row */
+/* question row ï¿½ behaves like subheading row */
 .faq-question {
   width: 100%;
   padding: 14px 18px;
@@ -1980,7 +1980,7 @@ a:hover {
   transform: rotate(-45deg);
 }
 
-/* when open – make chevron point up */
+/* when open ï¿½ make chevron point up */
 .faq-item.is-open .faq-icon::before {
   transform: rotate(-45deg);
 }
@@ -2009,7 +2009,7 @@ a:hover {
 
 
 /* =========================================================
-   MEMBER DASHBOARD – DARK THEME (MATCHING ROOT TOKENS)
+   MEMBER DASHBOARD ï¿½ DARK THEME (MATCHING ROOT TOKENS)
    ========================================================= */
 
 /* Main wrapper */
@@ -2204,7 +2204,7 @@ a:hover {
 }
 
 /* =========================================================
-   PREMIUM UPGRADE – Luxury Dashboard Styling
+   PREMIUM UPGRADE ï¿½ Luxury Dashboard Styling
    ========================================================= */
 
 /* Smooth fade for section switching */
@@ -2300,7 +2300,7 @@ a:hover {
   margin-bottom: 28px;
 }
 
-/* Inputs – premium glowing border focus */
+/* Inputs ï¿½ premium glowing border focus */
 .dash-input {
   background: rgba(0,0,0,0.35);
   border: 1px solid rgba(255,255,255,0.08);
@@ -2320,7 +2320,7 @@ a:hover {
   accent-color: var(--accent);
 }
 
-/* Buttons – more luxurious */
+/* Buttons ï¿½ more luxurious */
 .btn-primary {
   background: linear-gradient(
     to right,
@@ -2368,3 +2368,72 @@ a:hover {
   margin-top: 36px;
   margin-bottom: 24px;
 }
+
+
+/* ===== MODAL ===== */
+.sp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.sp-modal {
+  background: #fff;
+  width: 420px;
+  border-radius: 14px;
+  overflow: hidden;
+  animation: scaleIn 0.2s ease;
+}
+
+.sp-modal-header,
+.sp-modal-footer {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f8f8;
+}
+
+.sp-modal-body {
+  padding: 18px;
+}
+
+.sp-modal textarea,
+.sp-modal select {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(.9); opacity: 0 }
+  to { transform: scale(1); opacity: 1 }
+}
+
+/* ===== REVIEWS ===== */
+.sp-reviews-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.sp-review-card {
+  /* background: #fff; */
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.sp-review-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+

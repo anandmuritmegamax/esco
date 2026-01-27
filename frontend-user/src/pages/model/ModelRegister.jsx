@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "../../utils/axios";
 import PublicLayout from "../../components/layout/PublicLayout";
+
+import { useGetLocationSettingsQuery } from "../../redux/api/settingsApi";
+
+import { useNavigate } from "react-router-dom";
 
 /* ================= S3 UPLOAD ================= */
 const uploadToS3 = async (file, folder) => {
   const { data } = await axios.get(
     `/s3/presigned-url?fileType=${encodeURIComponent(
-      file.type
-    )}&folder=${encodeURIComponent(folder)}`
+      file.type,
+    )}&folder=${encodeURIComponent(folder)}`,
   );
 
   const res = await fetch(data.uploadUrl, {
@@ -21,10 +25,15 @@ const uploadToS3 = async (file, folder) => {
 };
 
 const ModelRegister = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  /* ================= FORM STATE ================= */
-  const [form, setForm] = useState({
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const { data: locationSettingsData } = useGetLocationSettingsQuery();
+
+  const initialFormState = {
     username: "",
     password: "",
     email: "",
@@ -34,6 +43,9 @@ const ModelRegister = () => {
     tagline: "",
     based_in: "",
     nationality: "",
+
+    country: "",
+    city: "",
 
     services: [],
     place_of_service: [],
@@ -73,10 +85,56 @@ const ModelRegister = () => {
 
     about_me: "",
     accept_terms: false,
-  });
+  };
+
+  /* ================= FORM STATE ================= */
+  const [form, setForm] = useState(initialFormState);
 
   const [profilePhotos, setProfilePhotos] = useState([]);
   const [galleryPhotos, setGalleryPhotos] = useState([]);
+  useEffect(() => {
+    const fetchCountriesAndDefault = async () => {
+      const { data } = await axios.get("/location/countries");
+      const countriesList = data.countries || [];
+      setCountries(countriesList);
+
+      const defaultCountryId =
+        locationSettingsData?.settings?.["location.defaultCountryId"];
+
+      if (defaultCountryId) {
+        setSelectedCountry(defaultCountryId);
+
+        setForm((p) => ({
+          ...p,
+          country: defaultCountryId,
+        }));
+
+        // 🔥 Load cities for default country
+        const cityRes = await axios.get(`/location/cities/${defaultCountryId}`);
+        setCities(cityRes.data.cities || []);
+      }
+    };
+
+    fetchCountriesAndDefault();
+  }, [locationSettingsData]);
+
+  // useEffect(() => {
+  //   const fetchCountries = async () => {
+  //     const { data } = await axios.get("/location/countries");
+  //     setCountries(data.countries);
+  //   };
+  //   fetchCountries();
+  // }, []);
+
+  const handleCountryChange = async (e) => {
+    const countryId = e.target.value;
+    setSelectedCountry(countryId);
+
+    setForm((p) => ({ ...p, country: countryId, city: "" }));
+
+    const { data } = await axios.get(`/location/cities/${countryId}`);
+    setCities(data.cities);
+  };
 
   const handleCheckbox = (e) => {
     const { name, value, checked } = e.target;
@@ -173,6 +231,10 @@ const ModelRegister = () => {
         });
       }
 
+      const selectedCountryObj = countries.find(
+        (c) => String(c._id) === String(form.country),
+      );
+
       /* PAYLOAD */
       const payload = {
         username: form.username,
@@ -184,6 +246,9 @@ const ModelRegister = () => {
         tagline: form.tagline,
         based_in: form.based_in,
         nationality: form.nationality,
+
+        country: selectedCountryObj?.name,
+        city: form.city,
 
         services: form.services,
         place_of_service: form.place_of_service,
@@ -240,7 +305,25 @@ const ModelRegister = () => {
 
       await axios.post("/models/register", cleanPayload);
 
-      toast.success("Profile submitted for review");
+      toast.success("OTP sent to your email");
+
+      // Redirect to OTP page
+      navigate("/verify-otp", {
+        state: { email: form.email },
+      });
+
+      //toast.success("Profile submitted for review");
+      // RESET FORM STATE
+      setForm(initialFormState);
+
+      // RESET COUNTRY / CITY
+      setSelectedCountry("");
+      setCities([]);
+
+      // RESET FILE INPUT STATES
+      setProfilePhotos([]);
+      setGalleryPhotos([]);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed");
     } finally {
@@ -361,6 +444,46 @@ const ModelRegister = () => {
                       <option>Russian</option>
                       <option>European</option>
                       <option>Asian</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="sp-card reg-card">
+                <h2 className="reg-section-title">Location</h2>
+
+                <div className="reg-row">
+                  <div className="reg-field">
+                    <label>Country*</label>
+                    <select
+                      required
+                      value={selectedCountry}
+                      onChange={handleCountryChange}
+                    >
+                      <option value="">Select country</option>
+                      {countries.map((c) => (
+                        <option key={c._id} value={c._id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="reg-field">
+                    <label>City*</label>
+                    <select
+                      required
+                      name="city"
+                      value={form.city}
+                      onChange={handleChange}
+                      disabled={!selectedCountry}
+                    >
+                      <option value="">Select city</option>
+                      {cities.map((c) => (
+                        <option key={c._id} value={c.name}>
+                          {c.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -590,8 +713,12 @@ const ModelRegister = () => {
                   I confirm I am over 18
                 </label>
 
-                <button className="reg-submit-btn" type="submit">
-                  Submit profile
+                <button
+                  className="reg-submit-btn"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? "Submitting..." : "Submit profile"}
                 </button>
               </div>
             </form>

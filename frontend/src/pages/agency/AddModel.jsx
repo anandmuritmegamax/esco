@@ -1,102 +1,104 @@
-import React, { useState } from "react";
-import { useAddModelMutation } from "../../redux/api/agencyApi";
+// src/pages/agency/AgencyAddModel.jsx
 import toast from "react-hot-toast";
+import { useAddModelMutation } from "../../redux/api/agencyApi";
+import ModelForm from "./ModelForm";
 
 const AgencyAddModel = () => {
   const [addModel, { isLoading }] = useAddModelMutation();
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    email: "",
-    stageName: "",
-    age: "",
-    // Add other fields from Model schema
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const submit = async ({ formData, profileImage, portfolio, countries }) => {
     try {
-      await addModel(formData).unwrap();
-      toast.success("Model added successfully");
-      // Reset form or redirect
+      const countryObj = countries.find(
+        (c) => String(c._id) === String(formData.country),
+      );
+
+      const payload = {
+        /* AUTH */
+        username: formData.username,
+        password: formData.password,
+        email: formData.email,
+
+        /* PROFILE HEADER */
+        stageName: formData.stageName,
+        age: Number(formData.age),
+        tagline: formData.tagline,
+        based_in: formData.based_in,
+        nationality: formData.nationality,
+
+        /* LOCATION */
+        country: countryObj?.name,
+        city: formData.city,
+
+        /* SERVICES */
+        services: formData.services
+          ? formData.services.split(",").map((v) => v.trim())
+          : [],
+        place_of_service: formData.place_of_service
+          ? formData.place_of_service.split(",").map((v) => v.trim())
+          : [],
+        profile_type: formData.profile_type,
+
+        /* INFO CARD */
+        height: formData.height,
+        weight: formData.weight,
+        cup_size: formData.cup_size,
+        price_1h: formData.price_1h,
+        currency: formData.currency,
+
+        /* PROFILE DETAILS */
+        ethnicity: formData.ethnicity,
+        body_type: formData.body_type,
+        hair_color: formData.hair_color,
+        eyes: formData.eyes,
+        breast: formData.breast,
+        pubic_hair: formData.pubic_hair,
+        meeting_with: formData.meeting_with,
+        languages: formData.languages
+          ? formData.languages.split(",").map((v) => v.trim())
+          : [],
+        location: formData.location,
+
+        /* RATES */
+        rate_30_out: formData.rate_30_out,
+        rate_30_in: formData.rate_30_in,
+        rate_1h_out: formData.rate_1h_out,
+        rate_1h_in: formData.rate_1h_in,
+        rate_2h_out: formData.rate_2h_out,
+        rate_2h_in: formData.rate_2h_in,
+        rate_note: formData.rate_note,
+
+        /* AVAILABILITY */
+        days: formData.days
+          ? formData.days.split(",").map((v) => v.trim())
+          : [],
+        availability_text: formData.availability_text,
+
+        /* CONTACT */
+        phone: formData.phone,
+        website: formData.website,
+        snapchat: formData.snapchat,
+        preferred_contact: formData.preferred_contact,
+
+        /* ABOUT */
+        about_me: formData.about_me,
+
+        /* MEDIA */
+        profileImage,
+        portfolio,
+      };
+
+      await addModel(payload).unwrap();
+      toast.success("Model added successfully (Pending approval)");
     } catch (err) {
-      toast.error("Failed to add model");
+      toast.error(err?.data?.message || "Failed to add model");
     }
   };
 
   return (
-    <div className="page-inner">
-      <div className="page-header">
-        <h3 className="fw-bold mb-3">Add New Model</h3>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>Stage Name</label>
-          <input
-            type="text"
-            name="stageName"
-            value={formData.stageName}
-            onChange={handleChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label>Age</label>
-          <input
-            type="number"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            className="form-control"
-            min="18"
-            required
-          />
-        </div>
-        {/* Add more fields as per Model schema */}
-        <button type="submit" className="btn btn-primary" disabled={isLoading}>
-          {isLoading ? "Adding..." : "Add Model"}
-        </button>
-      </form>
-    </div>
+    <ModelForm
+      submitLabel={isLoading ? "Adding..." : "Add Model"}
+      onSubmit={submit}
+    />
   );
 };
 

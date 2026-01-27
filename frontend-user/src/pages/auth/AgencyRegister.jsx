@@ -2,8 +2,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "../../utils/axios";
 import PublicLayout from "../../components/layout/PublicLayout";
+import { useNavigate } from "react-router-dom";
 
 const AgencyRegister = () => {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -39,8 +42,12 @@ const AgencyRegister = () => {
       setLoading(true);
 
       const res = await axios.post("/agencies/register", form);
+      toast.success("OTP sent to your email");
+      navigate("/agency/verify-otp", {
+        state: { email: form.email },
+      });
 
-      toast.success(res.data?.message || "Agency registered successfully");
+      //toast.success(res.data?.message || "Agency registered successfully");
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed");
     } finally {

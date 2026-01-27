@@ -6,6 +6,7 @@ import {
   useUpdateModelStatusMutation,
 } from "../../../redux/api/modelApi";
 import ModelForm from "./ModelForm";
+import axios from "../../../utils/axios";
 
 const ModelList = () => {
   const [search, setSearch] = useState("");
@@ -33,6 +34,19 @@ const ModelList = () => {
     await updateStatus({ id, status }).unwrap();
     toast.success("Status updated");
     refetch();
+  };
+
+  const sendNotification = async (model) => {
+    try {
+      await axios.post("/admin/notifications/send", {
+        modelId: model._id,
+        templateKey: "PLAN_EXPIRY_REMINDER",
+      });
+
+      toast.success("Notification sent");
+    } catch {
+      toast.error("Failed to send notification");
+    }
   };
 
   const columns = [
@@ -76,6 +90,14 @@ const ModelList = () => {
                 onClick={() => changeStatus(row._id, "rejected")}
               >
                 Reject
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item text-primary"
+                onClick={() => sendNotification(row)}
+              >
+                Send Plan Reminder
               </button>
             </li>
           </ul>

@@ -4,6 +4,9 @@ import cookieParser from 'cookie-parser';
 import { connectDatabase } from './config/dbConnect.js';
 import errorMiddleware from './middlewares/errors.js';
 
+import "./cron/planExpiryNotifier.js";
+
+
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -15,7 +18,7 @@ process.on('uncaughtException', (err) => {
 dotenv.config({ path: 'backend/config/config.env' });
 
 // Connect to database
-connectDatabase();
+await connectDatabase();
 
 // Initialize app
 const app = express();
@@ -42,6 +45,14 @@ import agencyRoutes from "./routes/agencyRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 //import authUserRoutes from './routes/authRoutes.js';
 import homeRoutes from "./routes/homeRoutes.js";
+import cryptoRoutes from "./routes/cryptoRoutes.js";
+import locationRoutes from "./routes/locationRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import settingRoutes from "./routes/settingRoutes.js";
+import masterRoutes from "./routes/masterRoutes.js";
+import pricingPlanRoutes from "./routes/pricingPlanRoutes.js";
+import adminNotificationRoutes from "./routes/adminNotificationRoutes.js";
+import pageRoutes from "./routes/pageRoutes.js";
 
 // Mount routes
 const routes = [
@@ -62,6 +73,14 @@ const routes = [
     clientRoutes,
     homeRoutes,
     //authUserRoutes,
+    cryptoRoutes,
+    locationRoutes,
+    paymentRoutes,
+    settingRoutes,
+    masterRoutes,
+    pricingPlanRoutes,
+    adminNotificationRoutes,
+    pageRoutes,
 ];
 
 routes.forEach((route) => app.use('/api/v1', route));

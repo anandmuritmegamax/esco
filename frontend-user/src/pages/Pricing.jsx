@@ -1,114 +1,63 @@
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import PublicLayout from "../components/layout/PublicLayout";
 import "../assets/css/pricing.css";
+import { useGetPlansQuery } from "../redux/api/pricingApi";
 
 const Pricing = () => {
-  const getLoggedInModelId = () => {
-    // Option A: full model object
-    const modelData = localStorage.getItem("auth");
-    console.log("Model Data:", JSON.parse(modelData).user);
-    if (modelData) {
-      try {
-        const model = JSON.parse(modelData).user;
-        return model?.id || null;
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  };
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetPlansQuery();
 
-  const payNow = async (planCode, amount) => {
-    const modelId = getLoggedInModelId();
+  const plans =
+    data?.plans
+      ?.filter((p) => p.status === "active")
+      ?.sort((a, b) => a.priorityLevel - b.priorityLevel) || [];
 
-    // 🔐 LOGIN CHECK
-    if (!modelId) {
-      alert("Please login first to purchase a plan.");
-      return;
-    }
-
-    try {
-      const res = await axios.post("/api/v1/payments/create", {
-        planCode,
-        amount,
-        userType: "model",
-        userId: modelId,
-      });
-
-      window.location.href = res.data.paymentUrl;
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Unable to start payment. Please try again.");
-    }
+  const choosePlan = (planId) => {
+    navigate(`/select-cities/${planId}`);
   };
 
   return (
     <PublicLayout>
       <main className="pricing-page">
-        {/* ================= HERO ================= */}
         <section className="pricing-hero">
-          <div className="container pricing-hero-inner">
-            <div className="pricing-hero-copy">
-              <p className="pricing-eyebrow">Advertising on DubaiSociete</p>
-              <h1 className="pricing-title">
-                Pricing &amp; advertising packages
-              </h1>
-              <p className="pricing-subtitle">
-                Choose the visibility level that fits your brand.
-              </p>
-            </div>
-          </div>
+          <h1>Pricing & Advertising Packages</h1>
         </section>
 
-        {/* ================= PLANS ================= */}
-        <section className="pricing-plans" id="plans">
-          <div className="container">
-            <header className="pricing-section-header">
-              <h2>Main packages</h2>
-              <p>
-                Start with a Standard listing and move up as you see results.
-              </p>
-            </header>
-
+        <section className="pricing-plans">
+          {isLoading ? (
+            <p className="text-center">Loading plans...</p>
+          ) : (
             <div className="pricing-plan-grid">
-              {/* STANDARD */}
-              <article className="pricing-plan-card">
-                <h3>Standard listing</h3>
-                <span className="pricing-price">AED 249</span>
-                <button
-                  className="pricing-plan-btn"
-                  onClick={() => payNow("standard", 249)}
+              {plans.map((plan) => (
+                <article
+                  key={plan._id}
+                  className={`pricing-plan-card ${
+                    plan.priorityLevel === 1 ? "featured" : ""
+                  }`}
                 >
-                  Choose Standard
-                </button>
-              </article>
+                  <h3>{plan.name}</h3>
 
-              {/* FEATURED */}
-              <article className="pricing-plan-card pricing-plan-featured">
-                <div className="pricing-plan-ribbon">Most popular</div>
-                <h3>Featured listing</h3>
-                <span className="pricing-price">AED 449</span>
-                <button
-                  className="pricing-plan-btn pricing-plan-btn-primary"
-                  onClick={() => payNow("featured", 449)}
-                >
-                  Choose Featured
-                </button>
-              </article>
+                  <p className="price">
+                    {plan.currency} {plan.price}
+                    <span className="billing">/{plan.billingCycle}</span>
+                  </p>
 
-              {/* VIP */}
-              <article className="pricing-plan-card">
-                <h3>VIP takeover</h3>
-                <span className="pricing-price">AED 899</span>
-                <button
-                  className="pricing-plan-btn"
-                  onClick={() => payNow("vip", 899)}
-                >
-                  Choose VIP
-                </button>
-              </article>
+                  {/* FEATURES */}
+                  {plan.features?.length > 0 && (
+                    <ul className="features">
+                      {plan.features.map((f, i) => (
+                        <li key={i}>{f}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <button onClick={() => choosePlan(plan._id)}>
+                    Choose {plan.name}
+                  </button>
+                </article>
+              ))}
             </div>
-          </div>
+          )}
         </section>
       </main>
     </PublicLayout>

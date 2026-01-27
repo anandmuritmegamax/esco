@@ -3,21 +3,27 @@ import { useGetModelBookingsQuery } from "../../redux/api/modelApi";
 import toast from "react-hot-toast";
 
 const ModelBookings = () => {
-  const { data: bookings, isLoading, error } = useGetModelBookingsQuery();
+  const { data, isLoading, isError } = useGetModelBookingsQuery();
+
+  // ✅ Always extract array safely
+  const bookings = data?.bookings ?? [];
 
   useEffect(() => {
-    if (error) {
+    if (isError) {
       toast.error("Failed to load bookings");
     }
-  }, [error]);
+  }, [isError]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="page-inner">
       <div className="page-header">
         <h3 className="fw-bold mb-3">Bookings</h3>
       </div>
+
       <div className="card">
         <div className="card-body">
           <table className="table">
@@ -29,18 +35,26 @@ const ModelBookings = () => {
                 <th>Amount</th>
               </tr>
             </thead>
+
             <tbody>
-              {bookings?.map((booking) => (
-                <tr key={booking._id}>
-                  <td>{booking.clientName}</td>
-                  <td>{new Date(booking.date).toLocaleDateString()}</td>
-                  <td>{booking.status}</td>
-                  <td>${booking.amount}</td>
-                </tr>
-              ))}
-              {bookings?.length === 0 && (
+              {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                  <tr key={booking._id}>
+                    <td>{booking.clientName || "N/A"}</td>
+                    <td>
+                      {booking.date
+                        ? new Date(booking.date).toLocaleDateString()
+                        : "N/A"}
+                    </td>
+                    <td>{booking.status}</td>
+                    <td>${booking.amount}</td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <td colSpan="4">No bookings</td>
+                  <td colSpan="4" className="text-center">
+                    No bookings found
+                  </td>
                 </tr>
               )}
             </tbody>

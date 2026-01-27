@@ -6,21 +6,30 @@ import toast from "react-hot-toast";
 
 const AgencyModels = () => {
   const { user } = useSelector((state) => state.auth);
-  const { data: models, isLoading, error } = useGetAgencyModelsQuery(user.id);
+  console.log("agency Id", user?._id);
+  const { data, isLoading, isError } = useGetAgencyModelsQuery(user?._id, {
+    skip: !user?._id, // ✅ prevent query until user exists
+  });
+
+  // ✅ Always extract array safely
+  const models = data?.models ?? [];
 
   useEffect(() => {
-    if (error) {
+    if (isError) {
       toast.error("Failed to load models");
     }
-  }, [error]);
+  }, [isError]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="page-inner">
       <div className="page-header">
         <h3 className="fw-bold mb-3">My Models</h3>
       </div>
+
       <div className="card">
         <div className="card-body">
           <table className="table">
@@ -32,23 +41,25 @@ const AgencyModels = () => {
                 <th>Actions</th>
               </tr>
             </thead>
+
             <tbody>
-              {models?.map((model) => (
-                <tr key={model._id}>
-                  <td>{model.stageName}</td>
-                  <td>{model.age}</td>
-                  <td>{model.status}</td>
-                  <td>
-                    <Link
-                      to={`/agency/models/${model._id}/edit`}
-                      className="btn btn-sm btn-primary"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-              {models?.length === 0 && (
+              {models.length > 0 ? (
+                models.map((model) => (
+                  <tr key={model._id}>
+                    <td>{model.stageName || "N/A"}</td>
+                    <td>{model.age ?? "N/A"}</td>
+                    <td>{model.status}</td>
+                    <td>
+                      <Link
+                        to={`/agency/models/${model._id}/edit`}
+                        className="btn btn-sm btn-primary"
+                      >
+                        Edit
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
                   <td colSpan="4" className="text-center">
                     No models found

@@ -5,12 +5,29 @@ import Transaction from "../models/Transaction.js";
 import { upload_file, delete_file } from "../utils/cloudinary.js";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import slugify from "slugify";
+import ModelLike from "../models/ModelLike.js";
+import Favourite from "../models/Favourite.js";
+import Review from "../models/Review.js";
+import sendEmail from "../utils/sendEmail.js";
+import { checkUserExistsEverywhere } from "../utils/checkUserExists.js";
+
 
 /**
  * REGISTER MODEL
  */
 export const registerModel = catchAsyncErrors(async (req, res) => {
     const payload = req.body;
+
+    const alreadyExists = await checkUserExistsEverywhere({
+        email: payload.email,
+    });
+
+    if (alreadyExists) {
+        return res.status(400).json({
+            success: false,
+            message: "User already registered",
+        });
+    }
 
     const exists = await Model.findOne({
         $or: [{ username: payload.username }, { email: payload.email }],
@@ -23,14 +40,35 @@ export const registerModel = catchAsyncErrors(async (req, res) => {
         });
     }
 
+    // 🔐 Generate OTP
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
+    payload.emailOtp = {
+        code: otp,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+    };
+
     payload.slug = slugify(payload.stageName, { lower: true });
 
     const model = await Model.create(payload);
 
+    // 📧 Send OTP Email
+    await sendEmail({
+        to: model.email,
+        subject: "Verify your email – DubaiSociete",
+        html: `
+      <h2>Email Verification</h2>
+      <p>Your OTP is:</p>
+      <h1>${otp}</h1>
+      <p>This OTP is valid for 10 minutes.</p>
+    `,
+    });
+
     res.status(201).json({
         success: true,
-        message: "Profile submitted for review",
+        message: "OTP sent to email",
         modelId: model._id,
+        email: model.email,
     });
 });
 
@@ -40,30 +78,82 @@ export const registerModel = catchAsyncErrors(async (req, res) => {
 export const getModelDashboard = catchAsyncErrors(async (req, res) => {
     const modelId = req.user._id;
 
+    /* ================= EXISTING STATS ================= */
     const totalBookings = await Booking.countDocuments({ modelId });
-    const activeBookings = await Booking.countDocuments({ modelId, status: "active" });
-    const profileViews = req.user.profileViews || 0; // Assuming profileViews field added
+    const activeBookings = await Booking.countDocuments({
+        modelId,
+        status: "active",
+    });
+    const profileViews = req.user.profileViews || 0;
+
+    /* ================= PROFILE STATUS ================= */
+    const profileStatus = req.user.status; // pending | approved | rejected
+    console.log("status", profileStatus);
+    /* ================= PLAN STATUS ================= */
+    let planInfo = null;
+
+    if (req.user.advertising && req.user.advertising.expiresAt) {
+        const now = new Date();
+        const expiry = new Date(req.user.advertising.expiresAt);
+
+        const diffTime = expiry - now;
+        const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let status = "active";
+        if (daysLeft <= 0) status = "expired";
+        else if (daysLeft <= 5) status = "expiring";
+
+        planInfo = {
+            planId: req.user.advertising.planId,
+            planName: req.user.advertising.planName,
+            expiresAt: req.user.advertising.expiresAt,
+            daysLeft,
+            status, // active | expiring | expired
+        };
+    }
 
     res.json({
         success: true,
+
+        /* OLD DATA (unchanged) */
         totalBookings,
         activeBookings,
         profileViews,
+
+        /* NEW DATA */
+        profileStatus,
+        planInfo,
     });
 });
+
+// export const getModelDashboard = catchAsyncErrors(async (req, res) => {
+//     const modelId = req.user._id;
+
+//     const totalBookings = await Booking.countDocuments({ modelId });
+//     const activeBookings = await Booking.countDocuments({ modelId, status: "active" });
+//     const profileViews = req.user.profileViews || 0; // Assuming profileViews field added
+
+//     res.json({
+//         success: true,
+//         totalBookings,
+//         activeBookings,
+//         profileViews,
+//     });
+// });
 
 /**
  * MODEL PROFILE GET
  */
 export const getModelProfile = catchAsyncErrors(async (req, res) => {
-    const model = await Model.findById(req.user._id).select("-password");
-
-    if (!model) {
-        return res.status(404).json({
+    if (req.role !== "model") {
+        return res.status(403).json({
             success: false,
-            message: "Model not found",
+            message: "Access denied",
         });
     }
+
+    const model = req.user;
+    model.password = undefined;
 
     res.json({
         success: true,
@@ -71,11 +161,64 @@ export const getModelProfile = catchAsyncErrors(async (req, res) => {
     });
 });
 
+
+
 /**
  * MODEL PROFILE UPDATE
  */
 export const updateModelProfile = catchAsyncErrors(async (req, res) => {
-    const model = await Model.findByIdAndUpdate(req.user._id, req.body, { new: true }).select("-password");
+    const allowedFields = [
+        "stageName",
+        "tagline",
+        "age",
+        "based_in",
+        "nationality",
+        "services",
+        "place_of_service",
+        "profile_type",
+        "height",
+        "weight",
+        "cup_size",
+        "price_1h",
+        "currency",
+        "ethnicity",
+        "body_type",
+        "hair_color",
+        "eyes",
+        "pubic_hair",
+        "meeting_with",
+        "languages",
+        "location",
+        "rate_30_out",
+        "rate_30_in",
+        "rate_1h_out",
+        "rate_1h_in",
+        "rate_2h_out",
+        "rate_2h_in",
+        "rate_note",
+        "days",
+        "availability_text",
+        "phone",
+        "website",
+        "snapchat",
+        "preferred_contact",
+        "about_me",
+        "profileImage",
+        "portfolio",
+    ];
+
+    const updates = {};
+    allowedFields.forEach((field) => {
+        if (req.body[field] !== undefined) {
+            updates[field] = req.body[field];
+        }
+    });
+
+    const model = await Model.findByIdAndUpdate(
+        req.user._id,
+        updates,
+        { new: true }
+    ).select("-password");
 
     if (!model) {
         return res.status(404).json({
@@ -90,6 +233,7 @@ export const updateModelProfile = catchAsyncErrors(async (req, res) => {
         model,
     });
 });
+
 
 /**
  * MODEL PORTFOLIO GET
@@ -115,22 +259,77 @@ export const getModelPortfolio = catchAsyncErrors(async (req, res) => {
  * UPLOAD MEDIA TO PORTFOLIO
  */
 export const uploadMedia = catchAsyncErrors(async (req, res) => {
-    const { image } = req.body; // Assume base64 or url
-    const uploadResponse = await upload_file(image, "model_portfolio");
+    if (!req.file) {
+        return res.status(400).json({
+            success: false,
+            message: "No file uploaded",
+        });
+    }
+
+    const { isProfile, type } = req.body;
+    const file = req.file;
+
+    /* ================= UPLOAD TO STORAGE ================= */
+    // upload_file should accept buffer + mimetype
+    const uploadResponse = await upload_file(
+        file.buffer,
+        "model_portfolio",
+        file.mimetype
+    );
 
     const model = await Model.findById(req.user._id);
-    model.portfolio.push({
-        url: uploadResponse.url,
-        public_id: uploadResponse.public_id,
-        type: "image", // or video
-    });
+
+    if (!model) {
+        return res.status(404).json({
+            success: false,
+            message: "Model not found",
+        });
+    }
+
+    /* ================= PROFILE IMAGE ================= */
+    if (isProfile === "true") {
+        model.profileImage = {
+            url: uploadResponse.url,
+            key: uploadResponse.key || uploadResponse.public_id,
+            type: "image",
+            approved: false,
+        };
+    }
+    /* ================= PORTFOLIO ================= */
+    else {
+        model.portfolio.push({
+            url: uploadResponse.url,
+            key: uploadResponse.key || uploadResponse.public_id,
+            type: type === "video" ? "video" : "image",
+            approved: false,
+        });
+    }
+
     await model.save();
 
-    res.json({
+    res.status(200).json({
         success: true,
-        message: "Media uploaded",
+        message: "Media uploaded successfully",
     });
 });
+
+// export const uploadMedia = catchAsyncErrors(async (req, res) => {
+//     const { image } = req.body; // Assume base64 or url
+//     const uploadResponse = await upload_file(image, "model_portfolio");
+
+//     const model = await Model.findById(req.user._id);
+//     model.portfolio.push({
+//         url: uploadResponse.url,
+//         public_id: uploadResponse.public_id,
+//         type: "image", // or video
+//     });
+//     await model.save();
+
+//     res.json({
+//         success: true,
+//         message: "Media uploaded",
+//     });
+// });
 
 /**
  * DELETE MEDIA FROM PORTFOLIO
@@ -234,7 +433,7 @@ export const getModelByIdAdmin = catchAsyncErrors(async (req, res) => {
     if (!model) {
         return res.status(404).json({
             success: false,
-            message: "Model not found",
+            message: "Model not foundkkkkkkkkkkkkkkkkkk",
         });
     }
 
@@ -266,7 +465,7 @@ export const updateModelStatus = catchAsyncErrors(async (req, res) => {
     if (!model) {
         return res.status(404).json({
             success: false,
-            message: "Model not found",
+            message: "Model not founduuuuuuuuuuuuuuuu",
         });
     }
 
@@ -290,7 +489,7 @@ export const updateModelAdmin = catchAsyncErrors(async (req, res) => {
     if (!model) {
         return res.status(404).json({
             success: false,
-            message: "Model not found",
+            message: "Model not foundnnnnnnnnnnnnnnnnn",
         });
     }
 
@@ -310,7 +509,7 @@ export const deleteModelAdmin = catchAsyncErrors(async (req, res) => {
     if (!model) {
         return res.status(404).json({
             success: false,
-            message: "Model not found",
+            message: "Model not foundmmmmmmmmmmmmm",
         });
     }
 
@@ -324,25 +523,47 @@ export const deleteModelAdmin = catchAsyncErrors(async (req, res) => {
  * PUBLIC: Get approved models
  * GET /api/v1/models
  */
-export const getPublicModels = catchAsyncErrors(async (req, res) => {
-    const { status = "approved" } = req.query;
+// export const getPublicModels = catchAsyncErrors(async (req, res) => {
+//     const { status = "approved" } = req.query;
 
-    const filter = {};
-    if (status) {
-        filter.status = status;
-    }
+//     const filter = {};
+//     if (status) {
+//         filter.status = status;
+//     }
 
-    const models = await Model.find(filter)
-        .select(
-            "stageName age based_in nationality profileImage portfolio tagline"
-        )
-        .sort({ createdAt: -1 });
+//     const models = await Model.find(filter)
+//         .select(
+//             "stageName age based_in nationality profileImage portfolio tagline"
+//         )
+//         .sort({ createdAt: -1 });
 
-    res.json({
-        success: true,
-        models,
+//     res.json({
+//         success: true,
+//         models,
+//     });
+// });
+
+export const getPublicModels = async (req, res) => {
+    const planPriority = {
+        diamond: 1,
+        vip: 2,
+        gold: 3,
+        new: 4,
+        free: 5,
+    };
+    console.log("plan", planPriority);
+
+    const models = await Model.find({ status: "approved" }).lean();
+
+    models.sort((a, b) => {
+        const aPriority = planPriority[a.listing_type] ?? 99;
+        const bPriority = planPriority[b.listing_type] ?? 99;
+        return aPriority - bPriority;
     });
-});
+
+    res.json({ success: true, models });
+};
+
 
 /**
  * PUBLIC: Get model by slug
@@ -359,7 +580,7 @@ export const getPublicModelBySlug = catchAsyncErrors(async (req, res) => {
     if (!model) {
         return res.status(404).json({
             success: false,
-            message: "Model not found",
+            message: "Model not founaaaaaaaaaaaaaad",
         });
     }
 
@@ -368,3 +589,99 @@ export const getPublicModelBySlug = catchAsyncErrors(async (req, res) => {
         model,
     });
 });
+
+// controllers/modelController.js
+// export const likeModel = async (req, res) => {
+//     try {
+//         const model = await Model.findByIdAndUpdate(
+//             req.params.id,
+//             { $inc: { likesCount: 1 } },
+//             { new: true } // return updated doc
+//         );
+
+//         res.json({ likes: model.likesCount });
+//     } catch (error) {
+//         res.status(500).json({ message: "Like failed" });
+//     }
+// };
+
+export const likeModel = async (req, res) => {
+    const userId = req.user._id;
+    const modelId = req.params.id;
+
+    // Check if already liked
+    const alreadyLiked = await ModelLike.findOne({ userId, modelId });
+
+    if (alreadyLiked) {
+        return res.status(200).json({
+            success: false,
+            alreadyLiked: true,
+            message: "You already liked this profile",
+        });
+    }
+
+    // Save like
+    await ModelLike.create({ userId, modelId });
+
+    // Increment counter safely
+    const model = await Model.findByIdAndUpdate(
+        modelId,
+        { $inc: { likesCount: 1 } },
+        { new: true }
+    );
+
+    res.json({
+        success: true,
+        likes: model.likesCount,
+    });
+};
+
+
+export const getUserModelStatus = async (req, res) => {
+    const userId = req.user._id;
+    const modelId = req.params.id;
+
+    const liked = await ModelLike.exists({ userId, modelId });
+    const favourite = await Favourite.exists({ userId, modelId });
+
+    res.json({
+        liked: !!liked,
+        favourite: !!favourite,
+    });
+};
+
+export const getApprovedReviews = async (req, res) => {
+    const reviews = await Review.find({
+        modelId: req.params.id,
+        status: "approved",
+    }).populate("userId", "name");
+
+    res.json(reviews);
+};
+
+export const verifyModelEmailOtp = async (req, res) => {
+    const { email, otp } = req.body;
+
+    const model = await Model.findOne({ email });
+
+    if (!model) {
+        return res.status(404).json({ message: "Model not found" });
+    }
+
+    if (!model.emailOtp || model.emailOtp.code !== otp) {
+        return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (model.emailOtp.expiresAt < new Date()) {
+        return res.status(400).json({ message: "OTP expired" });
+    }
+
+    model.emailVerified = true;
+    model.emailOtp = undefined;
+    await model.save();
+
+    res.json({
+        success: true,
+        message: "Email verified successfully",
+    });
+};

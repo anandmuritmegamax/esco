@@ -46,8 +46,14 @@ const PricingList = () => {
       center: true,
     },
     { name: "Billing", selector: (r) => r.billingCycle, center: true },
-    { name: "Max Images", selector: (r) => r.maxPortfolioImages, center: true },
     { name: "Priority", selector: (r) => r.priorityLevel, center: true },
+    {
+      name: "City Limit",
+      selector: (r) => r.cityLimit,
+      center: true,
+      sortable: true,
+    },
+
     {
       name: "Status",
       cell: (r) => (

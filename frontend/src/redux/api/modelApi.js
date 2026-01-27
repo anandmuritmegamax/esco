@@ -154,6 +154,13 @@ export const modelApi = createApi({
             query: (slug) => `/model/${slug}`,
             providesTags: (result, error, slug) => [{ type: "Models", id: slug }],
         }),
+        getMyReviews: builder.query({
+            query: () => "/model/reviews",
+        }),
+
+        getMyReports: builder.query({
+            query: () => "/model/reports",
+        }),
     })
 });
 
@@ -165,5 +172,6 @@ export const {
     useGetModelPortfolioQuery, useUploadMediaMutation, useDeleteMediaMutation,
     useGetModelBookingsQuery, useGetModelEarningsQuery,
     useGetModelAvailabilityQuery, useUpdateModelAvailabilityMutation,
-    useGetPublicModelsQuery, useGetPublicModelBySlugQuery,
+    useGetPublicModelsQuery, useGetPublicModelBySlugQuery, useGetMyReviewsQuery,
+    useGetMyReportsQuery,
 } = modelApi;

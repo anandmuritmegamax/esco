@@ -23,7 +23,17 @@ const Login = () => {
       toast.success("Login successful");
       navigate("/profile");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      //toast.error(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message;
+
+      if (msg === "Please verify your email first") {
+        toast.error(msg);
+        navigate("/verify-otp", {
+          state: { email: form.identifier },
+        });
+      } else {
+        toast.error(msg || "Login failed");
+      }
     } finally {
       setLoading(false);
     }

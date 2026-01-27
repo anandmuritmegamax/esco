@@ -9,6 +9,8 @@ import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
 import { delete_file, upload_file } from "../utils/cloudinary.js";
 import Permission from "../models/permission.js";
+import { checkUserExistsEverywhere } from "../utils/checkUserExists.js";
+
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -31,70 +33,125 @@ export const login = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler("Please provide identifier and password", 400));
     }
 
-    // Try all user types (User first for admin, then others)
-    let user = await User.findOne({ email: identifier }).select("+password").populate("role");
-    let isAdmin = !!user; // Flag for admin (User model)
+    let user = null;
+    let role = null;
+    let isAdmin = false;
 
+    /* =========================
+       1️⃣ ADMIN LOGIN (User)
+    ========================== */
+    user = await User.findOne({ email: identifier })
+        .select("+password")
+        .populate("role");
+
+    if (user) {
+        isAdmin = true;
+        role = user.role?.name?.toLowerCase() || "admin";
+    }
+
+    /* =========================
+       2️⃣ CLIENT LOGIN
+    ========================== */
     if (!user) {
         user = await Client.findOne({
             $or: [{ email: identifier }, { username: identifier }],
         });
-        if (!user) {
-            user = await Agency.findOne({
-                $or: [{ email: identifier }, { username: identifier }],
-            });
-            if (!user) {
-                user = await Model.findOne({
-                    $or: [{ email: identifier }, { username: identifier }],
-                });
-            }
-        }
+        if (user) role = "client";
     }
+
+    /* =========================
+       3️⃣ AGENCY LOGIN
+    ========================== */
+    if (!user) {
+        user = await Agency.findOne({
+            $or: [{ email: identifier }, { username: identifier }],
+        });
+        if (user) role = "agency";
+    }
+
+    /* =========================
+       4️⃣ MODEL LOGIN
+    ========================== */
+    if (!user) {
+        user = await Model.findOne({
+            $or: [{ email: identifier }, { username: identifier }],
+        });
+        if (user) role = "model";
+    }
+
     if (!user) {
         return next(new ErrorHandler("Invalid credentials", 401));
     }
 
-    // Check status for non-admin users
+    /* =========================
+       STATUS CHECK (NON-ADMIN)
+    ========================== */
     if (!isAdmin && user.status !== "approved") {
         return next(new ErrorHandler("Account pending approval", 403));
     }
 
-    // Compare password
-    let isMatch;
+    /* =========================
+       PASSWORD CHECK
+    ========================== */
+    let isMatch = false;
+
     if (isAdmin) {
         isMatch = await user.comparePassword(password);
     } else {
         isMatch = await bcrypt.compare(password, user.password);
     }
-    console.log("is password match:", isMatch);
+
     if (!isMatch) {
         return next(new ErrorHandler("Invalid credentials", 401));
     }
 
-    // Determine role
-    let role;
-    if (isAdmin) {
-        role = user.role ? user.role.name.toLowerCase() : "admin"; // Use populated role.name or default to 'admin'
-    } else {
-        role = user.constructor.modelName.toLowerCase(); // client, agency, model
+    // 🚫 BLOCK LOGIN IF EMAIL NOT VERIFIED (HERE ⬇️)
+    // if (!user.emailVerified && !isAdmin) {
+    //     return res.status(403).json({
+    //         message: "Please verify your email first",
+    //     });
+    // }
+
+    if (
+        !isAdmin &&
+        !user.emailVerified &&
+        (role === "model" || role === "agency")
+    ) {
+        return res.status(403).json({
+            message: "Please verify your email first",
+        });
     }
 
-    // Generate token
+    /* =========================
+       TOKEN
+    ========================== */
     const token = signToken(user._id, role);
 
-    // Determine display name based on user type
+    /* =========================
+       DISPLAY NAME
+    ========================== */
     let name = "";
-    const modelName = user.constructor.modelName.toLowerCase();
-    if (modelName === "user") {
-        name = user.name;
-    } else if (modelName === "client") {
-        name = user.name;
-    } else if (modelName === "agency") {
-        name = user.agencyName;
-    } else if (modelName === "model") {
-        name = user.stageName || user.username;
-    }
 
+    switch (role) {
+        case "admin":
+            name = user.name;
+            break;
+        case "client":
+            name = user.name;
+            break;
+        case "agency":
+            name = user.agencyName;
+            break;
+        case "model":
+            name = user.stageName || user.username;
+            break;
+        default:
+            name = "";
+    }
+    console.log(user);
+    /* =========================
+       RESPONSE
+    ========================== */
     res.status(200).json({
         success: true,
         token,
@@ -102,6 +159,9 @@ export const login = catchAsyncErrors(async (req, res, next) => {
             id: user._id,
             role,
             name,
+            email: user.email,
+            country: user.country,
+            city: user.city,
         },
     });
 });
@@ -113,6 +173,18 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
     // try {
     const { name, email, phone, password, roleName } = req.body;
+
+
+    const alreadyExists = await checkUserExistsEverywhere({
+        email: email,
+    });
+
+    if (alreadyExists) {
+        return res.status(400).json({
+            success: false,
+            message: "User already registered",
+        });
+    }
 
     const role = await Role.findOne({ _id: roleName });
     if (!role) return res.status(400).json({ message: 'Invalid role' });
@@ -171,15 +243,30 @@ export const assignRole = catchAsyncErrors(async (req, res) => {
 });
 
 // Logout User => /api/v1/logout
-export const logoutUser = catchAsyncErrors(async (req, res, next) => {
+// export const logoutUser = catchAsyncErrors(async (req, res, next) => {
+//     res.cookie("token", null, {
+//         expires: new Date(Date.now()),
+//         httpOnly: true
+//     })
+//     res.status(200).json({
+//         message: "Logged Out",
+//     })
+// })
+
+export const logoutUser = (req, res) => {
     res.cookie("token", null, {
         expires: new Date(Date.now()),
-        httpOnly: true
-    })
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "DEVELOPMENT",
+    });
+
     res.status(200).json({
-        message: "Logged Out",
-    })
-})
+        success: true,
+        message: "Logged out successfully",
+    });
+};
+
 
 // Upload user avatar => /api/v1/me/upload_avatar
 export const uploadAvatar = catchAsyncErrors(async (req, res, next) => {

@@ -14,6 +14,9 @@ import {
     addModel,
     getAgencyBookings,
     getAgencyEarnings,
+    verifyAgencyEmailOtp,
+    getAgencyModelById,
+    updateAgencyModel,
 } from "../controllers/agencyController.js";
 
 import { isAuthenticatedUser, authorizeRoles } from "../middlewares/auth.js";
@@ -22,6 +25,8 @@ const router = express.Router();
 
 /* ===== PUBLIC ===== */
 router.post("/agencies/register", registerAgency);
+router.post("/agencies/verify-email-otp", verifyAgencyEmailOtp);
+
 
 /* ===== AGENCY ===== */
 router.get(
@@ -57,6 +62,20 @@ router.post(
     isAuthenticatedUser,
     authorizeRoles("agency"),
     addModel
+);
+
+router.get(
+    "/agency/models/:id",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    getAgencyModelById
+);
+
+router.put(
+    "/agency/models/:id",
+    isAuthenticatedUser,
+    authorizeRoles("agency"),
+    updateAgencyModel
 );
 
 router.get(

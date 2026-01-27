@@ -3,10 +3,23 @@ import Client from "../models/Client.js";
 import Model from "../models/Model.js";
 import Booking from "../models/Booking.js";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
+import { checkUserExistsEverywhere } from "../utils/checkUserExists.js";
+
 
 /* ================= PUBLIC REGISTER ================= */
 export const registerClient = catchAsyncErrors(async (req, res) => {
     const payload = req.body;
+
+    const alreadyExists = await checkUserExistsEverywhere({
+        email: payload.email,
+    });
+
+    if (alreadyExists) {
+        return res.status(400).json({
+            success: false,
+            message: "User already registered",
+        });
+    }
 
     const exists = await Client.findOne({
         $or: [{ username: payload.username }, { email: payload.email }],

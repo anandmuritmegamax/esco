@@ -33,6 +33,11 @@ import { Toaster } from "react-hot-toast";
 import ModelDetail from "./pages/model/ModelDetail";
 import Profile from "./pages/Profile";
 import Pricing from "./pages/Pricing";
+import SelectCities from "./pages/SelectCities";
+import Checkout from "./pages/Checkout";
+import VerifyOtp from "./pages/VerifyOtp";
+import AgencyVerifyOtp from "./pages/auth/AgencyVerifyOtp";
+import CmsPage from "./pages/CmsPage";
 
 function App() {
   return (
@@ -55,6 +60,11 @@ function App() {
           <Route path="/register/agency" element={<AgencyRegister />} />
           <Route path="/models/:slug" element={<ModelDetail />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/select-cities/:planId" element={<SelectCities />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/agency/verify-otp" element={<AgencyVerifyOtp />} />
+
 
           {/* Model */}
           <Route
@@ -113,6 +123,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/pages/:slug" element={<CmsPage />} />
+
 
         </Routes>
       </BrowserRouter>

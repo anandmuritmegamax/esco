@@ -10,11 +10,25 @@ export default function EmailSettings() {
   const [updateSettings, { isLoading }] = useUpdateEmailSettingsMutation();
 
   const [form, setForm] = useState({
+    // SMTP
+    "email.smtpHost": "",
+    "email.smtpPort": "",
+    "email.smtpUser": "",
+    "email.smtpPass": "",
+
+    // Emails
     "email.fromEmail": "",
-    "email.smtpProvider": "",
-    "email.adminNotificationEmail": "",
-    "email.modelApprovalTemplate": "",
-    "email.paymentReminderTemplate": "",
+    "email.adminEmail": "",
+
+    // Templates
+    "email.template.registrationSuccess": "",
+    "email.template.profileApproval": "",
+    "email.template.paymentSuccess": "",
+    "email.template.planSelectionSuccess": "",
+    "email.template.planExpiry": "",
+    "email.template.planRenew": "",
+
+    // Toggle
     "email.disableEmails": false,
   });
 
@@ -31,76 +45,93 @@ export default function EmailSettings() {
 
   const save = async () => {
     await updateSettings(form).unwrap();
-    toast.success("Email & notification settings saved");
+    toast.success("Email settings saved successfully");
   };
 
   return (
     <div className="card p-4">
       <h3 className="mb-4">Email & Notification Settings</h3>
 
-      {/* From Email */}
-      <div className="mb-3">
-        <label>From Email</label>
-        <input
-          name="email.fromEmail"
-          value={form["email.fromEmail"]}
-          onChange={handleChange}
-          placeholder="no-reply@yourdomain.com"
-          className="form-control"
-        />
-      </div>
+      {/* SMTP SETTINGS */}
+      <h5 className="mt-3">SMTP Configuration</h5>
 
-      {/* SMTP Provider */}
-      <div className="mb-3">
-        <label>SMTP Provider</label>
-        <input
-          name="email.smtpProvider"
-          value={form["email.smtpProvider"]}
-          onChange={handleChange}
-          placeholder="gmail / sendgrid / aws-ses"
-          className="form-control"
-        />
-      </div>
+      <input
+        className="form-control mb-2"
+        placeholder="SMTP Host"
+        name="email.smtpHost"
+        value={form["email.smtpHost"]}
+        onChange={handleChange}
+      />
 
-      {/* Admin Notification Email */}
-      <div className="mb-3">
-        <label>Admin Notification Email</label>
-        <input
-          name="email.adminNotificationEmail"
-          value={form["email.adminNotificationEmail"]}
-          onChange={handleChange}
-          placeholder="admin@yourdomain.com"
-          className="form-control"
-        />
-      </div>
+      <input
+        className="form-control mb-2"
+        placeholder="SMTP Port"
+        name="email.smtpPort"
+        value={form["email.smtpPort"]}
+        onChange={handleChange}
+      />
 
-      {/* Model Approval Template */}
-      <div className="mb-3">
-        <label>Model Approval Email Template</label>
-        <textarea
-          name="email.modelApprovalTemplate"
-          value={form["email.modelApprovalTemplate"]}
-          onChange={handleChange}
-          rows={4}
-          placeholder="Hi {{name}}, your profile has been approved..."
-          className="form-control"
-        />
-      </div>
+      <input
+        className="form-control mb-2"
+        placeholder="SMTP Username"
+        name="email.smtpUser"
+        value={form["email.smtpUser"]}
+        onChange={handleChange}
+      />
 
-      {/* Payment Reminder Template */}
-      <div className="mb-3">
-        <label>Payment Reminder Email Template</label>
-        <textarea
-          name="email.paymentReminderTemplate"
-          value={form["email.paymentReminderTemplate"]}
-          onChange={handleChange}
-          rows={4}
-          placeholder="Reminder: Please complete your payment..."
-          className="form-control"
-        />
-      </div>
+      <input
+        type="password"
+        className="form-control mb-3"
+        placeholder="SMTP Password"
+        name="email.smtpPass"
+        value={form["email.smtpPass"]}
+        onChange={handleChange}
+      />
 
-      {/* Disable Emails */}
+      {/* EMAIL ADDRESSES */}
+      <h5 className="mt-4">Email Addresses</h5>
+
+      <input
+        className="form-control mb-2"
+        placeholder="From Email"
+        name="email.fromEmail"
+        value={form["email.fromEmail"]}
+        onChange={handleChange}
+      />
+
+      <input
+        className="form-control mb-3"
+        placeholder="Admin Notification Email"
+        name="email.adminEmail"
+        value={form["email.adminEmail"]}
+        onChange={handleChange}
+      />
+
+      {/* EMAIL TEMPLATES */}
+      <h5 className="mt-4">Email Templates</h5>
+
+      {[
+        ["registrationSuccess", "Registration Success"],
+        ["profileApproval", "Profile Approval"],
+        ["paymentSuccess", "Payment Success"],
+        ["planSelectionSuccess", "Plan Selection"],
+        ["planExpiry", "Plan Expiry Reminder"],
+        ["planRenew", "Plan Renew Confirmation"],
+      ].map(([key, label]) => (
+        <div className="mb-3" key={key}>
+          <label>{label} Email Template</label>
+          <textarea
+            className="form-control"
+            rows={4}
+            name={`email.template.${key}`}
+            value={form[`email.template.${key}`]}
+            onChange={handleChange}
+            placeholder={`Hi {{name}}, ...`}
+          />
+        </div>
+      ))}
+
+      {/* DISABLE EMAILS */}
       <div className="form-check mb-4">
         <input
           type="checkbox"
@@ -115,7 +146,7 @@ export default function EmailSettings() {
       </div>
 
       <button className="btn btn-dark" onClick={save} disabled={isLoading}>
-        Save Settings
+        Save Email Settings
       </button>
     </div>
   );

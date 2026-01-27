@@ -117,6 +117,16 @@ export const agencyApi = createApi({
             query: () => "/agency/earnings",
             providesTags: ["Earning"],
         }),
+        getAgencyModel: builder.query({
+            query: (id) => `/agency/models/${id}`,
+        }),
+        updateAgencyModel: builder.mutation({
+            query: ({ id, body }) => ({
+                url: `/agency/models/${id}`,
+                method: "PUT",
+                body,
+            }),
+        }),
     }),
 });
 
@@ -134,4 +144,7 @@ export const {
     useAddModelMutation,
     useGetAgencyBookingsQuery,
     useGetAgencyEarningsQuery,
+    useGetAgencyModelQuery,
+    useUpdateAgencyModelMutation,
+
 } = agencyApi;

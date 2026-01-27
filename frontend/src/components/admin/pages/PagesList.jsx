@@ -1,59 +1,59 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
-import {
-  useGetPlansQuery,
-  useDeletePlanMutation,
-} from "../../../redux/api/pricingApi";
 import toast from "react-hot-toast";
-import PricingForm from "./PricingForm";
+import {
+  useGetPagesQuery,
+  useDeletePageMutation,
+} from "../../../redux/api/pagesApi";
+import PageForm from "./PageForm";
 
-const PricingPlanList = () => {
+const PagesList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [editPlan, setEditPlan] = useState(null);
+  const [editPage, setEditPage] = useState(null);
 
-  const { data, isLoading, refetch } = useGetPlansQuery();
-  const [deletePlan] = useDeletePlanMutation();
+  const { data, isLoading, refetch } = useGetPagesQuery();
+  const [deletePage] = useDeletePageMutation();
 
-  const plans = data?.plans || [];
+  const pages = data?.pages || [];
 
   const filtered = useMemo(() => {
-    if (!searchTerm.trim()) return plans;
+    if (!searchTerm.trim()) return pages;
     const s = searchTerm.toLowerCase();
-    return plans.filter((p) => {
-      const target =
-        `${p.name} ${p.currency} ${p.billingCycle} ${p.status}`.toLowerCase();
-      return target.includes(s);
-    });
-  }, [searchTerm, plans]);
+    return pages.filter((p) =>
+      `${p.title} ${p.slug} ${p.status}`.toLowerCase().includes(s),
+    );
+  }, [searchTerm, pages]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
-      await deletePlan(id).unwrap();
-      toast.success("Plan deleted");
+      await deletePage(id).unwrap();
+      toast.success("Page deleted");
       refetch();
-    } catch (err) {
+    } catch {
       toast.error("Delete failed");
     }
   };
 
   const columns = [
-    { name: "Name", selector: (r) => r.name, sortable: true, center: true },
     {
-      name: "Price",
-      selector: (r) => `${r.currency} ${r.price}`,
+      name: "Title",
+      selector: (r) => r.title,
+      sortable: true,
       center: true,
     },
-    { name: "Billing", selector: (r) => r.billingCycle, center: true },
-    { name: "Max Images", selector: (r) => r.maxPortfolioImages, center: true },
-    { name: "Priority", selector: (r) => r.priorityLevel, center: true },
+    {
+      name: "Slug",
+      selector: (r) => r.slug,
+      center: true,
+    },
     {
       name: "Status",
       cell: (r) => (
         <span
           className={`badge bg-${
-            r.status === "active" ? "success" : "secondary"
+            r.status === "published" ? "success" : "secondary"
           }`}
         >
           {r.status}
@@ -76,7 +76,7 @@ const PricingPlanList = () => {
               <button
                 className="dropdown-item"
                 onClick={() => {
-                  setEditPlan(row);
+                  setEditPage(row);
                   setShowForm(true);
                 }}
               >
@@ -103,21 +103,21 @@ const PricingPlanList = () => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Pricing Plans</h2>
+        <h2>Pages</h2>
         <button
           className="btn btn-primary"
           onClick={() => {
-            setEditPlan(null);
+            setEditPage(null);
             setShowForm(!showForm);
           }}
         >
-          {showForm ? "Close Form" : "Add Plan"}
+          {showForm ? "Close Form" : "Add Page"}
         </button>
       </div>
 
       {showForm && (
-        <PricingForm
-          plan={editPlan}
+        <PageForm
+          page={editPage}
           onSaved={() => {
             setShowForm(false);
             refetch();
@@ -128,7 +128,7 @@ const PricingPlanList = () => {
       <div className="mb-3">
         <input
           type="text"
-          placeholder="Search plans..."
+          placeholder="Search pages..."
           className="form-control"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -143,10 +143,10 @@ const PricingPlanList = () => {
         highlightOnHover
         striped
         responsive
-        noDataComponent="No plans found"
+        noDataComponent="No pages found"
       />
     </div>
   );
 };
 
-export default PricingPlanList;
+export default PagesList;

@@ -21,7 +21,7 @@ const PricingPlans = ({ onSelectPlan }) => {
     setLoading(true);
     try {
       const res = await fetch(
-        "/api/v1/plans?q=&status=active&sortBy=priority&order=desc"
+        "/api/v1/plans?q=&status=active&sortBy=priority&order=desc",
       );
       const data = await res.json();
       setPlans(data.plans || []);

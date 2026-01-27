@@ -97,6 +97,27 @@ const Sidebar = () => {
                   </Link>
                 </li>
 
+                <li className="nav-item">
+                  <Link to="/admin/pages">
+                    <i className="fas fa-tags"></i>
+                    <p>Pages</p>
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link to="/admin/reviews">
+                    <i className="fas fa-tags"></i>
+                    <p>Model Reviews</p>
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link to="/admin/reports">
+                    <i className="fas fa-tags"></i>
+                    <p>Model Reports</p>
+                  </Link>
+                </li>
+
                 {/* Roles & Permissions */}
                 <li className="nav-item">
                   <Link to="/admin/roles">
@@ -148,6 +169,9 @@ const Sidebar = () => {
                       </li>
                       <li>
                         <Link to="/admin/settings/email">Email</Link>
+                      </li>
+                      <li>
+                        <Link to="/admin/settings/aws">AWS</Link>
                       </li>
                       <li>
                         <Link to="/admin/settings/security">Security</Link>
@@ -223,6 +247,18 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link to="/model/reviews">
+                    <i className="fas fa-images"></i>
+                    <p>Reviews</p>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/model/reports">
+                    <i className="fas fa-images"></i>
+                    <p>Reports</p>
+                  </Link>
+                </li>
+                {/* <li className="nav-item">
                   <Link to="/model/bookings">
                     <i className="fas fa-calendar-check"></i>
                     <p>Bookings</p>
@@ -239,7 +275,7 @@ const Sidebar = () => {
                     <i className="fas fa-clock"></i>
                     <p>Availability</p>
                   </Link>
-                </li>
+                </li> */}
               </>
             )}
 
@@ -264,7 +300,7 @@ const Sidebar = () => {
                     <p>Add New Model</p>
                   </Link>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Link to="/agency/bookings">
                     <i className="fas fa-calendar-alt"></i>
                     <p>Bookings</p>
@@ -275,7 +311,7 @@ const Sidebar = () => {
                     <i className="fas fa-chart-line"></i>
                     <p>Earnings</p>
                   </Link>
-                </li>
+                </li> */}
               </>
             )}
 

@@ -8,7 +8,10 @@ const ModelCard = ({ model }) => {
 
   return (
     <article className="card">
-      <Link to={`/models/${model.stageName}`} className="card-img">
+      <Link
+        to={`/models/${model.stageName.toLowerCase()}`}
+        className="card-img"
+      >
         <img
           src={getImage(model.profileImage)}
           alt={model.stageName}

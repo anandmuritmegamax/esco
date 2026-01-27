@@ -1,15 +1,80 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
-import bcrypt from "bcryptjs"; // Add this import
+import bcrypt from "bcryptjs";
+
 /* MEDIA SCHEMA */
 const MediaSchema = new mongoose.Schema(
     {
         url: { type: String, required: true },
+        key: {
+            type: String,
+            //required: true 
+        }, // ✅ S3 object key
         type: { type: String, enum: ["image", "video"], default: "image" },
         approved: { type: Boolean, default: false },
     },
+    { timestamps: true } // ✅ keep _id
+);
+
+/* ADVERTISING / PLAN SCHEMA */
+/* ADVERTISING / PLAN SCHEMA */
+const AdvertisingSchema = new mongoose.Schema(
+    {
+        planId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "PricingPlan",
+            required: true,
+        },
+
+        planName: {
+            type: String, // snapshot for history
+            required: true,
+        },
+
+        cities: {
+            type: [String],
+            default: [],
+        },
+
+        amount: {
+            type: Number,
+            required: true,
+        },
+
+        currency: {
+            type: String,
+            default: "AED",
+        },
+
+        paymentId: {
+            type: String,
+            required: true,
+        },
+
+        orderId: {
+            type: String,
+            required: true,
+        },
+
+        invoiceId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Invoice",
+        },
+
+        activatedAt: {
+            type: Date,
+            default: Date.now,
+        },
+
+        expiresAt: {
+            type: Date,
+            required: true,
+        },
+    },
     { _id: false }
 );
+
+
 
 /* MAIN MODEL SCHEMA */
 const ModelSchema = new mongoose.Schema(
@@ -43,19 +108,8 @@ const ModelSchema = new mongoose.Schema(
         body_type: String,
         hair_color: String,
         eyes: String,
-        pubic_hair: String,
-        meeting_with: String,
         languages: [String],
         location: String,
-
-        /* RATES */
-        rate_30_out: String,
-        rate_30_in: String,
-        rate_1h_out: String,
-        rate_1h_in: String,
-        rate_2h_out: String,
-        rate_2h_in: String,
-        rate_note: String,
 
         /* AVAILABILITY */
         days: [String],
@@ -64,15 +118,20 @@ const ModelSchema = new mongoose.Schema(
         /* CONTACT */
         phone: String,
         website: String,
-        snapchat: String,
         preferred_contact: String,
 
         /* ABOUT */
         about_me: String,
 
+        country: { type: String, required: true },
+        city: { type: String, required: true },
+
         /* MEDIA */
         profileImage: MediaSchema,
         portfolio: [MediaSchema],
+
+        /* ADVERTISING PLAN */
+        advertising: AdvertisingSchema,
 
         /* STATUS */
         status: {
@@ -80,30 +139,47 @@ const ModelSchema = new mongoose.Schema(
             enum: ["pending", "approved", "rejected"],
             default: "pending",
         },
+
         listing_type: {
             type: String,
             enum: ["new", "gold", "diamond"],
             default: "new",
         },
-        slug: {
-            type: String,
-            unique: true,
-            index: true,
+
+        emailVerified: {
+            type: Boolean,
+            default: false,
         },
+
+        emailOtp: {
+            code: String,
+            expiresAt: Date,
+        },
+
+        slug: { type: String, unique: true, index: true },
+
         agencyId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Agency",
+            // required: true,
         },
+        likesCount: { type: Number, default: 0 },
     },
     { timestamps: true }
 );
 
-// Add pre-save hook for password hashing
+/* 🔐 Password hash */
 ModelSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) {
-        next();
-    }
+    if (!this.isModified("password")) return next();
     this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+/* 🔗 Slug generator */
+ModelSchema.pre("save", function (next) {
+    if (this.isModified("stageName")) {
+        this.slug = slugify(this.stageName, { lower: true });
+    }
     next();
 });
 

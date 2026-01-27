@@ -6,30 +6,31 @@ import {
   useDeleteMasterMutation,
 } from "../../redux/api/masterApi";
 
+const allowedTypes = [
+  "languages",
+  "skills",
+  "bodyTypes",
+  "eyeColors",
+  "hairColors",
+  "availableFor",
+];
+
 export default function Masters() {
   const { type } = useParams();
+
+  // 🚨 RETURN EARLY BEFORE ANY HOOKS
+  if (!allowedTypes.includes(type)) {
+    return <Navigate to="/admin/masters/languages" replace />;
+  }
+
+  // ✅ Hooks are now unconditional
   const [label, setLabel] = useState("");
 
-  const { data, isLoading, error } = useGetMastersQuery(type, {
-    skip: !type,
-  });
+  const { data, isLoading, error } = useGetMastersQuery(type);
 
   const [createMaster, { isLoading: creating }] = useCreateMasterMutation();
 
   const [deleteMaster] = useDeleteMasterMutation();
-
-  const allowedTypes = [
-    "languages",
-    "skills",
-    "bodyTypes",
-    "eyeColors",
-    "hairColors",
-    "availableFor",
-  ];
-
-  if (!allowedTypes.includes(type)) {
-    return <Navigate to="/admin/masters/languages" replace />;
-  }
 
   const add = async () => {
     if (!label.trim()) return;
